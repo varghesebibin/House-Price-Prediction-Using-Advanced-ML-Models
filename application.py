@@ -6,29 +6,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import altair as alt
-
-# For model loading
-import pickle
-
-# For HiPlot
-import hiplot as hip
-import streamlit.components.v1 as components
+import io  # For capturing .info() output
 
 # Ignore warnings
 import warnings
 warnings.filterwarnings("ignore")
 
-import plotly.express as px
-
 # Set the page layout
 st.set_page_config(page_title="House Price Prediction App", layout="wide")
 
-
+# Function to capture .info() output as a string
+def get_info_as_string(df):
+    buffer = io.StringIO()
+    df.info(buf=buffer)
+    return buffer.getvalue()
 
 # Load data
 @st.cache_data
 def load_data():
-    ames_data  = pd.read_csv('ames_data.csv')
+    ames_data = pd.read_csv('ames_data.csv')
     cpi_data = pd.read_csv('cpi_data_cleaned.csv')
     inflation_data = pd.read_csv('inflation_data_cleaned.csv')
     gdp_data = pd.read_csv('gdp_data_cleaned.csv')
@@ -48,15 +44,6 @@ sections = st.sidebar.radio(
 if sections == 'Dataset Overview':
     st.title("Dataset Overview")
 
-    st.write("""
-    In this section, you can explore the datasets used in this project. Below is an overview of each dataset:
-    
-    1. **Ames Housing Data**: Provides detailed housing information with over 80 features describing various attributes such as quality, size, and sale price.
-    2. **CPI (Consumer Price Index) Data**: Tracks changes in the price level of a basket of consumer goods and services over time.
-    3. **Inflation Rate Data**: Shows the rate of price increase for goods and services, indicating economic inflation trends.
-    4. **GDP Data (Gross Domestic Product)**: Measures the total economic output of a country, adjusted for inflation, providing insights into economic growth.
-    """)
-
     # Select dataset to explore
     dataset_choice = st.selectbox(
         "Select Dataset to Explore",
@@ -67,7 +54,8 @@ if sections == 'Dataset Overview':
     if dataset_choice == "Ames Housing Data":
         st.subheader("Ames Housing Data")
         st.write("### Basic Information")
-        st.text(ames_data.info())
+        basic_info = get_info_as_string(ames_data)
+        st.text(basic_info)
         st.write("### Statistical Summary")
         st.write(ames_data.describe())
         st.write("### Missing Values (Percentage)")
@@ -78,7 +66,8 @@ if sections == 'Dataset Overview':
     elif dataset_choice == "CPI Data":
         st.subheader("CPI Data")
         st.write("### Basic Information")
-        st.text(cpi_data.info())
+        basic_info = get_info_as_string(cpi_data)
+        st.text(basic_info)
         st.write("### Statistical Summary")
         st.write(cpi_data.describe())
         st.write("### Missing Values (Percentage)")
@@ -89,7 +78,8 @@ if sections == 'Dataset Overview':
     elif dataset_choice == "Inflation Rate Data":
         st.subheader("Inflation Rate Data")
         st.write("### Basic Information")
-        st.text(inflation_data.info())
+        basic_info = get_info_as_string(inflation_data)
+        st.text(basic_info)
         st.write("### Statistical Summary")
         st.write(inflation_data.describe())
         st.write("### Missing Values (Percentage)")
@@ -100,7 +90,8 @@ if sections == 'Dataset Overview':
     elif dataset_choice == "GDP Data":
         st.subheader("GDP Data")
         st.write("### Basic Information")
-        st.text(gdp_data.info())
+        basic_info = get_info_as_string(gdp_data)
+        st.text(basic_info)
         st.write("### Statistical Summary")
         st.write(gdp_data.describe())
         st.write("### Missing Values (Percentage)")
@@ -118,18 +109,18 @@ if sections == 'Dataset Overview':
     st.download_button(
         label="Download CPI Data",
         data=cpi_data.to_csv(index=False).encode('utf-8'),
-        file_name='cpi_data.csv',
+        file_name='cpi_data_cleaned.csv',
         mime='text/csv'
     )
     st.download_button(
         label="Download Inflation Data",
         data=inflation_data.to_csv(index=False).encode('utf-8'),
-        file_name='inflation_data.csv',
+        file_name='inflation_data_cleaned.csv',
         mime='text/csv'
     )
     st.download_button(
         label="Download GDP Data",
         data=gdp_data.to_csv(index=False).encode('utf-8'),
-        file_name='gdp_data.csv',
+        file_name='gdp_data_cleaned.csv',
         mime='text/csv'
     )
