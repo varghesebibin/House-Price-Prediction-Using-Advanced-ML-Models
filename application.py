@@ -48,6 +48,15 @@ sections = st.sidebar.radio(
 if sections == 'Dataset Overview':
     st.title("Dataset Overview")
 
+    st.write("""
+    In this section, you can explore the datasets used in this project. Below is an overview of each dataset:
+    
+    1. **Ames Housing Data**: Provides detailed housing information with over 80 features describing various attributes such as quality, size, and sale price.
+    2. **CPI (Consumer Price Index) Data**: Tracks changes in the price level of a basket of consumer goods and services over time.
+    3. **Inflation Rate Data**: Shows the rate of price increase for goods and services, indicating economic inflation trends.
+    4. **GDP Data (Gross Domestic Product)**: Measures the total economic output of a country, adjusted for inflation, providing insights into economic growth.
+    """)
+
     # Select dataset to explore
     dataset_choice = st.selectbox(
         "Select Dataset to Explore",
@@ -109,18 +118,18 @@ if sections == 'Dataset Overview':
     st.download_button(
         label="Download CPI Data",
         data=cpi_data.to_csv(index=False).encode('utf-8'),
-        file_name='cpi_data_cleaned.csv',
+        file_name='cpi_data.csv',
         mime='text/csv'
     )
     st.download_button(
         label="Download Inflation Data",
         data=inflation_data.to_csv(index=False).encode('utf-8'),
-        file_name='inflation_data_cleaned.csv',
+        file_name='inflation_data.csv',
         mime='text/csv'
     )
     st.download_button(
         label="Download GDP Data",
         data=gdp_data.to_csv(index=False).encode('utf-8'),
-        file_name='gdp_data_cleaned.csv',
+        file_name='gdp_data.csv',
         mime='text/csv'
     )
