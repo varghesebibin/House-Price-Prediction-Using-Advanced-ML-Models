@@ -31,7 +31,7 @@ ames_data, cpi_data, inflation_data, gdp_data = load_data()
 st.sidebar.title("Navigation")
 sections = st.sidebar.radio(
     "Go to",
-    ["Dataset Overview", "EDA and Visualization", "Data Cleaning", "Imputation"]
+    ["Dataset Overview", "Data Cleaning", "EDA and Visualization", "Feature Engineering", "Principal Component Analysis", "Model Buidling and Evaluation", "Predict House Price", "Real World Impact"]
 )
 
 # Dataset Overview Section
