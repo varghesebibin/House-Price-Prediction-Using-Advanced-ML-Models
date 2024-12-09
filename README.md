@@ -6,6 +6,8 @@ This repository contains the **House Price Prediction** project for the CMSE 830
   <img src="https://github.com/varghesebibin/House-Price-Prediction-Using-Advanced-ML-Models/blob/main/HPM.png?raw=true" alt="House Price Prediction Visualization" width="600"/>
 </p>
 
+---
+
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -19,41 +21,55 @@ This repository contains the **House Price Prediction** project for the CMSE 830
 - [Visualizations](#visualizations)
 - [Notebook Sections](#notebook-sections)
 
+---
+
 ## Introduction
 
-The **House Price Prediction** project focuses on analyzing and predicting house prices using a dataset that includes several features, such as `OverallQual`, `GrLivArea`, `GarageCars`, `TotalBsmtSF`, and more. Additionally, a second analysis explores key US macroeconomic indicators, including the unemployment rate and industrial production.
+The **House Price Prediction Using Advanced ML Models** project focuses on predicting house prices using a variety of machine learning models, including Ridge, Lasso, Elastic Net, Random Forest, and Gradient Boosting. This project incorporates extensive data preprocessing, feature engineering, and hyperparameter tuning.
+
+Additionally, the project integrates three distinct macroeconomic datasets—Consumer Price Index (CPI), Inflation Rate, and Gross Domestic Product (GDP)—to analyze their impact on housing trends.
 
 This repository includes:
 
-- **House Price Prediction**: Detailed Exploratory Data Analysis (EDA), data visualization, feature engineering, and regression modeling.
-- **Macroeconomic Indicators Analysis**: Analysis of the US economy using macroeconomic data on unemployment rate and industrial production from a Kaggle dataset.
+- **House Price Prediction**: Exploratory Data Analysis (EDA), advanced visualizations, feature engineering, and machine learning models.
+- **Macroeconomic Analysis**: Analysis of US economic indicators and their relationship to housing prices.
+
+---
 
 ## Project Structure
 
 The project contains the following key files and directories:
 
-- `application.py`: Main Streamlit application file for running the project.
-- `train.csv`: Dataset used for house price prediction.
-- `requirements.txt`: List of Python libraries needed to run the project.
-- `House Price Prediction Using Advanced Regression.ipynb`: Jupyter notebook containing the full analysis, including data exploration, visualization, feature engineering, model building, and evaluation.
-- `README.md`: Documentation for the repository.
+- `application.py`: Streamlit application for interactive exploration and predictions.
+- `ames_data.csv`: Primary dataset used for house price prediction.
+- `requirements.txt`: Python library dependencies.
+- `House_Price_Prediction_Notebook.ipynb`: Jupyter notebook with detailed analysis.
+- `README.md`: Documentation for the project.
+
+---
 
 ## Datasets
 
-The project utilizes two distinct datasets:
+This project uses four datasets:
 
-1. **House Price Dataset** (`train.csv`):
-   - This dataset contains house price data, including several numerical and categorical features. The dataset is used to predict house prices using Ridge and Lasso regression models.
-   
-2. **US Macroeconomic Indicators Dataset** (from Kaggle):
-   - <a href="https://www.kaggle.com/datasets/calven22/usa-key-macroeconomic-indicators" target="_blank">Kaggle Dataset: US Key Macroeconomic Indicators</a>
-   - This dataset contains macroeconomic data, including the unemployment rate and industrial production, which are analyzed for trends post-2000. The analysis provides insights into how these factors have influenced the US economy.
+1. **Ames Housing Dataset**:
+   - Source: Ames, Iowa housing data.
+   - Description: Contains over 80 features describing various attributes of houses, including quality, size, location, and sale price.
+
+2. **Consumer Price Index (CPI)**:
+   - Description: Measures changes in the price level of consumer goods and services purchased by households.
+
+3. **Inflation Rate Dataset**:
+   - Description: Tracks the rate at which the general level of prices for goods and services is rising.
+
+4. **Gross Domestic Product (GDP)**:
+   - Description: Measures the total economic output of a country.
 
 ---
 
 ## Data Description
 
-### 1. **House Price Prediction Dataset (train.csv)**
+### 1. **House Price Prediction Dataset (ames_data.csv)**
 
 This dataset includes 81 features that can be used to predict house prices. Each row represents a house, and the columns represent various attributes of the house. Here are the details:
 
@@ -134,41 +150,49 @@ This dataset includes 81 features that can be used to predict house prices. Each
 - **SaleType**: Type of sale.
 - **SaleCondition**: Condition of sale.
 
-### 2. **US Macroeconomic Indicators Dataset (Secondary Data)**
+### 2. **Consumer Price Index (CPI) Data**
 
-This dataset provides key macroeconomic indicators for the United States, focusing on data points from 1981 onwards. The dataset contains various economic indicators that reflect trends in unemployment, industrial production, and other important economic factors. Here are the main features:
+This dataset provides yearly CPI  for the United States, reflects changes in the average price level of consumer goods and services.
 
-- **DATE**: The date corresponding to each row of economic indicators (monthly data).
-- **unrate**: The unemployment rate, reflecting the percentage of the total labor force that is unemployed and actively seeking employment.
-- **psr**: Personal savings rate, indicating the percentage of disposable income saved by individuals.
-- **m2**: M2 money stock, which includes cash, checking deposits, and easily convertible near money.
-- **dspic**: Disposable personal income in billions of dollars.
-- **pce**: Personal consumption expenditures in billions of dollars, representing consumer spending.
-- **reer**: Real effective exchange rate (REER), which measures the value of a currency against a basket of others, adjusted for inflation.
-- **ir**: Interest rates, indicating the cost of borrowing money.
-- **ffer**: Federal Funds Effective Rate, the interest rate at which depository institutions lend balances to each other overnight.
-- **tcs**: Total consumer spending.
-- **indpro**: Industrial production index, measuring the output of industries like manufacturing, mining, and utilities in the US economy.
-- **ccpi**: Consumer Price Index (CPI), a measure of the weighted average of prices of a basket of consumer goods and services, adjusted for inflation.
+- **DATE**: The date at which data was recorded.
+- **CPI**: Measure of the weighted average of prices of a basket of consumer goods.
 
+### 3. **Inflation Rate Data**
+
+This dataset tracks the rate at which prices rise over time.
+- **DATE**: Inflation data recording date.
+- **Inflation_Rate**: Percentage change in average price levels over time.
+
+### 4. **Gross Domestic Product (GDP) Data**
+- **DATE**: GDP data recording date
+- **GDP_Value**: Gross Domestic Product in trillions.
 
 ## Features
 
-- **Data Exploration**: Interactive exploration of key features in the dataset using visualizations and statistical summaries.
-- **Imputation of Missing Values**: Handling missing data with techniques such as filling with the median or using categorical replacements.
-- **Feature Engineering**: Creation and transformation of new features to improve model performance.
-- **Model Building and Evaluation**: Training and evaluating Ridge and Lasso regression models using various performance metrics like Mean Absolute Error (MAE) and R².
-- **Macroeconomic Analysis**: Analyzing the unemployment rate and industrial production trends in the US economy post-2000.
-- **Interactive Streamlit App**: A web app that allows users to explore different sections (EDA, Visualization, Imputation, etc.) and make predictions.
+Key features for house price prediction include:
+
+- **OverallQual**: Quality of materials and finish.
+- **Log_GrLivArea**: Log-transformed above-grade living area in square feet.
+- **GarageCars**: Size of garage in car capacity.
+- **GarageArea**: Garage size in square feet.
+- **Log_1stFlrSF**: Log-transformed first-floor square feet.
+- **FullBath**: Full bathrooms above grade.
+- **YearBuilt**: Year the house was built.
+- **Log_TotRmsAbvGrd**: Log-transformed total rooms above grade.
+- **YearRemodAdd**: Year of most recent remodel.
+- **Log_House_Age**: Log-transformed house age.
 
 ## Setup and Installation
 
 To run this project locally, follow these steps:
 
+### Prerequisites
+Ensure Python 3.12.4 or later is installed.
+
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/varghesebibin/CMSE830_Midsemester_Project.git
-    cd CMSE830_Midsemester_Project
+    git clone https://github.com/varghesebibin/House-Price-Prediction-Using-Advanced-ML-Models.git
+    cd House-Price-Prediction-Using-Advanced-ML-Models
     ```
 
 2. **Create a virtual environment** (optional but recommended):
@@ -184,7 +208,7 @@ To run this project locally, follow these steps:
     ```
 
 4. **Set up the dataset**:
-    Ensure the `train.csv` file is present in the root directory. If it’s missing, upload your dataset or use your own version.
+    Ensure the `ames_data.csv`, 'CPI.csv', 'US Inflation Rate.csv', 'US GDP.csv' files are present in the root directory. If it’s missing, upload your dataset or use your own version.
 
 ## How to Run the Project
 
@@ -200,14 +224,10 @@ To run the **Streamlit** app, follow these steps:
 
 ## Key Insights
 
-Here are some of the important findings from the project:
-
-- **OverallQual** and **GrLivArea** have the strongest positive correlations with house prices.
-- **Newer houses** tend to have higher sale prices, especially those built after the 2000s.
-- **GarageCars** and **GarageArea** are highly correlated, indicating that one can be dropped to avoid multicollinearity in the model.
-- **Feature Engineering** and **Imputation** were crucial steps to improving the model's predictive power.
-- **US Macroeconomic Indicators**: Post-2000, there were clear trends in the **unemployment rate** and **industrial production**, affecting the overall economy, and these factors were analyzed in detail in the Jupyter Notebook.
-- **Ridge** and **Lasso Regression** models were evaluated, and hyperparameter tuning was performed to select the best model.
+- **Feature Importance**: OverallQual, GrLivArea, and GarageCars are the strongest predictors of sale prices.
+- **Effect of House Age**:Older houses negatively impact prices, showing a strong inverse correlation.
+- **Macroeconomic Indicators**: GDP showed a positive correlation, while CPI and Inflation had weaker relationships.
+- **Model Performance**: Random Forest and Gradient Boosting achieved the best accuracy, with MAE ≈ $21,000 and R² ≈ 0.84
 
 ## Technologies Used
 
@@ -230,16 +250,16 @@ The following visualizations are available within the project:
 4. **Boxplot of OverallQual vs SalePrice**: Compares overall quality with house prices.
 5. **Heatmap of Correlations**: Displays correlations between key numerical features.
 6. **HiPlot**: An interactive HiPlot for exploring relationships between key features and sale prices.
-7. **US Macroeconomic Indicator Plots**: Visualization of trends in **unemployment rate** and **industrial production**
+7. **US Macroeconomic Indicator Plots**: Visualization of trends in **CPI**, **GDP** and **Inflation**
 
 ## Notebook Sections
 
-The **Jupyter Notebook** file (`House Price Prediction Using Advanced Regression`) contains a comprehensive analysis of the data. The key sections are as follows:
+The **Jupyter Notebook** file (`House Price Prediction Model Final`) contains a comprehensive analysis of the data. The key sections are as follows:
 
 ### 1. **Data Exploration**
 - Detailed exploration of the dataset's structure, including the distribution of key variables like `SalePrice`, `GrLivArea`, and `OverallQual` (house price).
-- Analysis of the US economy post-2000 using key macroeconomic indicators such as the **unemployment rate** and **industrial production**.
-- Insights on how these factors influenced the economy post-2000.
+- Analysis of the US economy using key macroeconomic indicators such as the **CPI**, **GDP**, **Inflation**.
+- Insights on how these factors influenced the house price.
 - Visualization of correlations and relationships between variables using scatter plots, histograms, and boxplots.
 
 ### 2. **Exploratory Data Analysis (EDA)**
@@ -251,15 +271,17 @@ The **Jupyter Notebook** file (`House Price Prediction Using Advanced Regression
 - Heatmaps, pair plots, and HiPlot were used to display multivariate relationships.
 
 ### 4. **Imputation of Missing Values**
-- Handling missing values using various imputation techniques, including filling with medians and replacing categorical variables.
+- Handling missing values using various imputation techniques, including KNN and iterative imputation methods
 
 ### 5. **Feature Engineering**
 - Transformation of raw features into more useful variables for modeling.
 - Creating interaction terms and handling categorical variables.
+- Log transformation for positively skewed features
+- Encoding of categorical columns
 
 ### 6. **Model Building and Evaluation**
-- Training Ridge and Lasso regression models.
-- Hyperparameter tuning using cross-validation to optimize the models.
+- Training idge, Lasso, Elastic Net, Random Forest, and Gradient Boostig models
+- Hyperparameter tuning using cross-validation to optimize the models using GridSearchCV
 - Model evaluation using performance metrics such as Mean Absolute Error (MAE) and R².
 
 
