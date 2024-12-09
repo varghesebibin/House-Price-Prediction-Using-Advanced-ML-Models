@@ -67,16 +67,16 @@ This project uses four datasets:
 
 2. **Consumer Price Index (CPI)**:
    - Description: Measures changes in the price level of consumer goods and services purchased by households.
-   - <a href="https://data.worldbank.org/indicator/FP.CPI.TOTL?end=2023&locations=US&start=1960&view=chart" target="_blank">Open in New Tab</a>
+   - <a href="https://data.worldbank.org/indicator/FP.CPI.TOTL?end=2023&locations=US&start=1960&view=chart" target="_blank">Open</a>
 
 3. **Inflation Rate Dataset**:
    - Description: Tracks the rate at which the general level of prices for goods and services is rising.
-   - <a href="https://www.multpl.com/inflation/table/by-year" target="_blank">Open in New Tab</a>
+   - <a href="https://www.multpl.com/inflation/table/by-year" target="_blank">Open</a>
 
 
 4. **Gross Domestic Product (GDP)**
    - Description: Measures the total economic output of a country.
-   - <a href="https://www.multpl.com/us-gdp-inflation-adjusted/table/by-year" target="_blank">Open in New Tab</a>
+   - <a href="https://www.multpl.com/us-gdp-inflation-adjusted/table/by-year" target="_blank">Open</a>
 
 ---
 
