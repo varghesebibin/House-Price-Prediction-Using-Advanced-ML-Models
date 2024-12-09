@@ -60,18 +60,23 @@ The project contains the following key files and directories:
 
 This project uses four datasets:
 
-1. **Ames Housing Dataset** (Link)[https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques]:
+1. **Ames Housing Dataset**
    - Source: Ames, Iowa housing data.
    - Description: Contains over 80 features describing various attributes of houses, including quality, size, location, and sale price.
+   - <a href="https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques" target="_blank">Open in New Tab</a>
 
-2. **Consumer Price Index (CPI)** (Link)[https://data.worldbank.org/indicator/FP.CPI.TOTL?end=2023&locations=US&start=1960&view=chart]:
+2. **Consumer Price Index (CPI)**:
    - Description: Measures changes in the price level of consumer goods and services purchased by households.
+   - <a href="https://data.worldbank.org/indicator/FP.CPI.TOTL?end=2023&locations=US&start=1960&view=chart" target="_blank">Open in New Tab</a>
 
-3. **Inflation Rate Dataset**(Link)[https://www.multpl.com/inflation/table/by-year]:
+3. **Inflation Rate Dataset**:
    - Description: Tracks the rate at which the general level of prices for goods and services is rising.
+   - <a href="https://www.multpl.com/inflation/table/by-year" target="_blank">Open in New Tab</a>
 
-4. **Gross Domestic Product (GDP)** (Link)[https://www.multpl.com/us-gdp-inflation-adjusted/table/by-year]:
+
+4. **Gross Domestic Product (GDP)**
    - Description: Measures the total economic output of a country.
+   - <a href="https://www.multpl.com/us-gdp-inflation-adjusted/table/by-year" target="_blank">Open in New Tab</a>
 
 ---
 
