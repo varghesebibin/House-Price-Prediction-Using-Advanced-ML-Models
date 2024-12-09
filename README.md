@@ -293,7 +293,7 @@ The **Jupyter Notebook** file (`House Price Prediction Model Final`) contains a 
 - Encoding of categorical columns
 
 ### 6. **Model Building and Evaluation**
-- Training idge, Lasso, Elastic Net, Random Forest, and Gradient Boostig models
+- Training Rdge, Lasso, Elastic Net, Random Forest, and Gradient Boosting models
 - Hyperparameter tuning using cross-validation to optimize the models using GridSearchCV
 - Model evaluation using performance metrics such as Mean Absolute Error (MAE) and R².
 
