@@ -247,7 +247,7 @@ To run the **Streamlit** app, follow these steps:
 - **Python 3.12.4**: Core programming language.
 - **Pandas**: Data manipulation and analysis.
 - **Matplotlib** and **Seaborn**: Data visualization.
-- **Scikit-learn**: Machine learning, particularly for Ridge and Lasso regression.
+- **Scikit-learn**: Machine learning, particularly for Ridge and Lasso regression, Elastic Net and Ensemble Models
 - **Streamlit**: Interactive web app framework for displaying the project.
 - **HiPlot**: Visualization tool for interactive exploration of feature relationships.
 - **Altair**: Additional interactive visualizations.
