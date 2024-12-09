@@ -63,7 +63,7 @@ This project uses four datasets:
 1. **Ames Housing Dataset**
    - Source: Ames, Iowa housing data.
    - Description: Contains over 80 features describing various attributes of houses, including quality, size, location, and sale price.
-   - <a href="https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques" target="_blank">Open in New Tab</a>
+   - <a href="https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques" target="_blank">Open</a>
 
 2. **Consumer Price Index (CPI)**:
    - Description: Measures changes in the price level of consumer goods and services purchased by households.
