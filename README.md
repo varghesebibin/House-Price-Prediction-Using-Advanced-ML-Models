@@ -51,7 +51,7 @@ The project contains the following key files and directories:
 - `US Inflation Rate.csv`: Secondary dataset for tracking inflation rate of US economy.
 - `US GDP.csv`: Secondary dataset for tracking GDP of US economy.
 - `requirements.txt`: Python library dependencies.
-- `House_Price_Prediction_Notebook.ipynb`: Jupyter notebook with detailed analysis.
+- `House Price Prediction Model Final.ipynb`: Jupyter notebook with detailed analysis
 - `README.md`: Documentation for the project.
 
 ---
