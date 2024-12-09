@@ -233,7 +233,7 @@ To run the **Streamlit** app, follow these steps:
     streamlit run application.py
     ```
 
-3. **Access the app**: Open your web browser and go to the local URL provided (`https://cmse830midsemesterproject-gxbhpk4wstunehwvrgvjgk.streamlit.app/`).
+3. **Access the app**: Open your web browser and go to the local URL provided (`https://house-price-prediction-using-advanced-ml-models.streamlit.ap`).
 
 ## Key Insights
 
