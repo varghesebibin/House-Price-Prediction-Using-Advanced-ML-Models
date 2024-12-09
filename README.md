@@ -60,17 +60,17 @@ The project contains the following key files and directories:
 
 This project uses four datasets:
 
-1. **Ames Housing Dataset**:
+1. **Ames Housing Dataset** (Link)[https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques]:
    - Source: Ames, Iowa housing data.
    - Description: Contains over 80 features describing various attributes of houses, including quality, size, location, and sale price.
 
-2. **Consumer Price Index (CPI)**:
+2. **Consumer Price Index (CPI)** (Link)[https://data.worldbank.org/indicator/FP.CPI.TOTL?end=2023&locations=US&start=1960&view=chart]:
    - Description: Measures changes in the price level of consumer goods and services purchased by households.
 
-3. **Inflation Rate Dataset**:
+3. **Inflation Rate Dataset**(Link)[https://www.multpl.com/inflation/table/by-year]:
    - Description: Tracks the rate at which the general level of prices for goods and services is rising.
 
-4. **Gross Domestic Product (GDP)**:
+4. **Gross Domestic Product (GDP)** (Link)[https://www.multpl.com/us-gdp-inflation-adjusted/table/by-year]:
    - Description: Measures the total economic output of a country.
 
 ---
