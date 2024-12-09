@@ -149,24 +149,24 @@ if sections == 'Dataset Overview':
     st.download_button(
         label="Download Ames Housing Data",
         data=ames_data.to_csv(index=False).encode('utf-8'),
-        file_name='ames_data.csv',
+        file_name='ames_data_cleaned.csv',
         mime='text/csv'
     )
     st.download_button(
         label="Download CPI Data",
         data=cpi_data.to_csv(index=False).encode('utf-8'),
-        file_name='cpi_data.csv',
+        file_name='cpi_data_cleaned.csv',
         mime='text/csv'
     )
     st.download_button(
         label="Download Inflation Data",
         data=inflation_data.to_csv(index=False).encode('utf-8'),
-        file_name='inflation_data.csv',
+        file_name='inflation_data_cleaned.csv',
         mime='text/csv'
     )
     st.download_button(
         label="Download GDP Data",
         data=gdp_data.to_csv(index=False).encode('utf-8'),
-        file_name='gdp_data.csv',
+        file_name='gdp_data_cleaned.csv',
         mime='text/csv'
     )
