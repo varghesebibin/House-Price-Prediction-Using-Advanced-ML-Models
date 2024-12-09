@@ -1,6 +1,11 @@
 # House Price Prediction Using Advanced ML Models
 
-This repository contains the **House Price Prediction** project for the CMSE 830 Midsemester assessment, along with a secondary analysis focused on US macroeconomic indicators such as unemployment rate and industrial production. The project involves predicting house prices using Ridge and Lasso regression models, performing detailed model building and evaluation, as well as analyzing the US economy using key economic indicators.
+The House Price Prediction Using Advanced ML Models project predicts house prices using data from the Ames Housing dataset combined with secondary macroeconomic datasets such as CPI, Inflation Rate, and GDP. The models include Linear Regression, Ridge, Lasso, Elastic Net, Random Forest, and Gradient Boosting, with advanced feature engineering and hyperparameter tuning to enhance performance.
+
+The project is built with a focus on:
+- Analyzing key features impacting house prices
+- Incorporating macroeconomic indicators for additional insights.
+- Providing an interactive Streamlit app for exploration and predictions.
 
 <p align="center">
   <img src="https://github.com/varghesebibin/House-Price-Prediction-Using-Advanced-ML-Models/blob/main/HPM.png?raw=true" alt="House Price Prediction Visualization" width="600"/>
@@ -42,6 +47,9 @@ The project contains the following key files and directories:
 
 - `application.py`: Streamlit application for interactive exploration and predictions.
 - `ames_data.csv`: Primary dataset used for house price prediction.
+- `CPI.csv`: Secondary dataset for tracking consumer price index
+- `US Inflation Rate.csv`: Secondary dataset for tracking inflation rate of US economy
+- `US GDP.csv`: Secondary dataset for tracking GDP of US economy
 - `requirements.txt`: Python library dependencies.
 - `House_Price_Prediction_Notebook.ipynb`: Jupyter notebook with detailed analysis.
 - `README.md`: Documentation for the project.
