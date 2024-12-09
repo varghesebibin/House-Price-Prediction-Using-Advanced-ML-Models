@@ -221,7 +221,7 @@ Ensure Python 3.12.4 or later is installed.
     ```
 
 4. **Set up the dataset**:
-    Ensure the `ames_data.csv`, 'CPI.csv', 'US Inflation Rate.csv', 'US GDP.csv' files are present in the root directory. If it’s missing, upload your dataset or use your own version.
+    Ensure the `ames_data.csv`,`CPI.csv`, `US Inflation Rate.csv`, `US GDP.csv` files are present in the root directory. If it’s missing, upload your dataset or use your own version.
 
 ## How to Run the Project
 
