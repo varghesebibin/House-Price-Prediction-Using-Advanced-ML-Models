@@ -24,7 +24,7 @@ st.set_page_config(page_title="House Price Prediction App", layout="wide")
 # Load data
 @st.cache_data
 def load_data():
-    df = pd.read_csv('house_train.csv')
+    df = pd.read_csv('ames_data.csv')
     return df
 
 df = load_data()
