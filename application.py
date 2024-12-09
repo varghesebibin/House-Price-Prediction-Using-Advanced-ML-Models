@@ -69,6 +69,51 @@ if sections == 'Dataset Overview':
         missing_df.columns = ["Feature", "Missing Value Percentage"]
         st.write(missing_df)
 
+        # Key Information
+        st.write("### Key Information")
+        st.write("""
+        - **Total observations**: 1,460
+        - **Total features**: 81
+        - **Numeric features**: 38 (e.g., LotFrontage, GrLivArea, GarageCars)
+        - **Categorical features**: 43 (e.g., MSZoning, Neighborhood, GarageType)
+        - **Target Variable**: `SalePrice` (numeric, no missing values)
+        """)
+
+         # Visualize Missing Data
+        st.write("### Missing Data Visualization")
+        fig, ax = plt.subplots(figsize=(12, 6))
+        sns.barplot(data=missing_df, x="Missing Value Percentage", y="Feature", ax=ax, color="skyblue")
+        ax.set_title("Missing Data Percentage by Feature")
+        ax.set_xlabel("Missing Percentage")
+        ax.set_ylabel("Feature")
+        st.pyplot(fig)
+
+        # Impact of Missing Values on Target Variable
+        st.write("### Impact of Missing Values on Target Variable (`SalePrice`)")
+        features_na = missing_df["Feature"].tolist()
+
+        # Subplots for Missingness vs Median SalePrice
+        n_features = len(features_na)
+        n_cols = 3
+        n_rows = (n_features // n_cols) + (n_features % n_cols > 0)
+
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(15, n_rows * 5))
+        axes = axes.flatten()
+
+        for i, feature in enumerate(features_na):
+            temp_data = ames_data.copy()
+            temp_data[feature] = np.where(temp_data[feature].isnull(), 1, 0)
+            temp_data.groupby(feature)["SalePrice"].median().plot.bar(ax=axes[i], color='skyblue')
+            axes[i].set_title(f"{feature} Missingness")
+            axes[i].set_ylabel('Median SalePrice')
+            axes[i].set_xlabel('Missing (1) or Not Missing (0)')
+
+        for j in range(i + 1, len(axes)):
+            fig.delaxes(axes[j])
+
+        plt.tight_layout()
+        st.pyplot(fig)
+
     # CPI Data
     elif dataset_choice == "CPI Data":
         st.subheader("CPI Data")
