@@ -14,6 +14,7 @@ warnings.filterwarnings("ignore")
 from sklearn.impute import KNNImputer
 from sklearn.experimental import enable_iterative_imputer  # noqa
 from sklearn.impute import IterativeImputer
+import plotly.express as px
 
 # Set the page layout
 st.set_page_config(page_title="House Price Prediction App", layout="wide")
