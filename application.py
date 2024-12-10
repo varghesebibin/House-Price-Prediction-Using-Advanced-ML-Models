@@ -118,6 +118,20 @@ if sections == 'Dataset Overview':
 
         plt.tight_layout()
         st.pyplot(fig)
+        
+        # Findings and Recommendations
+        st.write("### Findings and Recommendations Based on Missingness")
+        st.write("""
+        **There is a clear relationship between missing values and the sale price of the house. Therefore, the missing values should be replaced with appropriate and meaningful values.**
+
+        ##### These are the findings based on the missingness in the data:
+
+        - PoolQC (99.52%), MiscFeature (96.30%), Alley (93.77%), and Fence (80.75%) have extremely high proportions of missing values. These features may not provide meaningful information and can likely be dropped.
+        - MasVnrType (59.72%) and FireplaceQu (47.26%) have moderate missing values. These require imputation as they could be valuable for the model (e.g., masonry veneer and fireplaces impact house price).
+        - Features like LotFrontage (17.73%), GarageYrBlt, GarageCond, and basement-related features have low missing percentages and are important predictors. Imputation methods like KNN, stochastic regression, or group-wise median can be applied to retain these features.
+
+        Columns with more than 80% missing values provide limited information and may not contribute meaningfully to the analysis.
+        """)
 
     # CPI Data
     elif dataset_choice == "CPI Data":
