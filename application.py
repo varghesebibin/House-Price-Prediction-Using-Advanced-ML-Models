@@ -490,6 +490,19 @@ if sections == "Visualizations":
     """)
 
 # Data Integration & Feature Engineering Section
+# Load Cleaned Data
+@st.cache_data
+def load_cleaned_data():
+    ames_data_cleaned = pd.read_csv('ames_data_cleaned.csv')
+    cpi_data_cleaned = pd.read_csv('cpi_data_cleaned.csv')
+    inflation_data_cleaned = pd.read_csv('inflation_data_cleaned.csv')
+    gdp_data_cleaned = pd.read_csv('gdp_data_cleaned.csv')
+    return ames_data_cleaned, cpi_data_cleaned, inflation_data_cleaned, gdp_data_cleaned
+
+# Load the cleaned datasets
+ames_data, cpi_data_cleaned, inflation_data_cleaned, gdp_data_cleaned = load_cleaned_data()
+
+# Data Integration & Feature Engineering Section
 if sections == "Data Integration & Feature Engineering":
     st.title("Data Integration & Feature Engineering")
 
@@ -528,16 +541,7 @@ if sections == "Data Integration & Feature Engineering":
     st.markdown("#### Filtered GDP Data")
     st.write(gdp_filtered.head())
 
-    # Merge macroeconomic data
-    st.markdown("#### Merging Datasets")
-    st.markdown("""
-    The following macroeconomic indicators are merged with the Ames Housing dataset:
-    - **CPI**: Merged using `YrSold` to calculate inflation-adjusted prices.
-    - **Inflation Rate**: Adds economic context to house prices during the sale year.
-    - **GDP**: Provides insights into economic growth trends during the sale period.
-    """)
-
-     # Merge datasets with Ames Housing
+    # Merge datasets with Ames Housing
     st.markdown("### Merging Macroeconomic Indicators with Ames Housing Data")
     ames_data = ames_data.merge(cpi_filtered[['Year', 'CPI']], left_on='YrSold', right_on='Year', how='left')
     ames_data = ames_data.merge(inflation_filtered[['Year', 'Inflation_Rate']], left_on='YrSold', right_on='Year', how='left')
@@ -561,12 +565,9 @@ if sections == "Data Integration & Feature Engineering":
     st.markdown("""
     ### Inflation Adjusted Price Calculation
     Using the formula:
-    $$
-    Inflation\\ Adjusted\\ Price = SalePrice \\times \\left( \\frac{Base\\ CPI (2010)}{CPI\\ for\\ YrSold} \\right)
-    $$
+    $$ Inflation \\ Adjusted \\ Price = SalePrice \\times \\left( \\frac{Base \\ CPI (2010)}{CPI \\ for \\ YrSold} \\right) $$
     The 2010 CPI is used as the base (100). This calculation adjusts nominal house prices to account for inflation, enabling accurate comparisons across years.
     """)
-
     base_cpi = cpi_filtered[cpi_filtered['Year'] == 2010]['CPI'].values[0]
     ames_data['Inflation_Adjusted_Price'] = ames_data['SalePrice'] * (base_cpi / ames_data['CPI'])
 
