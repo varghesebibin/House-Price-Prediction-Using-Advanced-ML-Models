@@ -216,7 +216,7 @@ if sections == 'Dataset Overview':
     st.download_button(
         label="Download Ames Housing Data",
         data=ames_data.to_csv(index=False).encode('utf-8'),
-        file_name='ames_data_cleaned.csv',
+        file_name='ames_data.csv',
         mime='text/csv'
     )
     st.download_button(
