@@ -11,6 +11,9 @@ import io  # For capturing .info() output
 # Ignore warnings
 import warnings
 warnings.filterwarnings("ignore")
+from sklearn.impute import KNNImputer
+from sklearn.experimental import enable_iterative_imputer  # noqa
+from sklearn.impute import IterativeImputer
 
 # Set the page layout
 st.set_page_config(page_title="House Price Prediction App", layout="wide")
@@ -32,7 +35,7 @@ st.sidebar.title("Navigation")
 sections = st.sidebar.radio(
     "Go to",
     [
-        "Dataset Overview", "EDA and Visualization", "Data Cleaning",
+        "Dataset Overview", "Data Cleaning", "EDA and Visualization",
         "Feature Engineering", "Principal Component Analysis", 
         "Model Building and Evaluation", "Predict House Price", 
         "Real World Impact"
@@ -234,3 +237,126 @@ if sections == 'Dataset Overview':
         file_name='gdp_data_cleaned.csv',
         mime='text/csv'
     )
+
+# Data Cleaning Section
+if sections == 'Data Cleaning':
+    st.title("Data Cleaning")
+
+    # Dataset choice
+    dataset_choice = st.selectbox(
+        "Select Dataset for Cleaning",
+        ["Ames Housing Data", "CPI Data", "Inflation Rate Data", "GDP Data"]
+    )
+
+    if dataset_choice == "Ames Housing Data":
+        st.subheader("Ames Housing Data Cleaning")
+        st.write("""
+        **Description**: This dataset contains information about residential houses in Ames, Iowa.
+        Cleaning involves handling missing values, removing duplicates, and ensuring data consistency.
+        """)
+
+        # Initial Data Shape
+        st.write("### Initial Data Shape")
+        st.write(f"Rows: {ames_data.shape[0]}, Columns: {ames_data.shape[1]}")
+
+        # Visualize Missing Data Heatmap
+        st.write("### Missing Data Heatmap")
+        fig, ax = plt.subplots(figsize=(12, 8))
+        sns.heatmap(ames_data.isnull(), cbar=False, cmap='viridis', ax=ax)
+        ax.set_title("Initial Missing Data Heatmap")
+        st.pyplot(fig)
+
+        # Drop columns with >80% missing values
+        st.write("### Dropping Columns with >80% Missing Values")
+        high_missing_cols = ['PoolQC', 'MiscFeature', 'Alley', 'Fence']
+        ames_data_cleaned = ames_data.drop(columns=high_missing_cols)
+        st.write(f"Dropped columns: {high_missing_cols}")
+        st.write(f"Remaining Columns: {ames_data_cleaned.shape[1]}")
+
+        # Handle Missing Values in Numerical Features using KNN
+        st.write("### Handling Missing Values for Numerical Features")
+        st.write("""
+        **Approach**: K-Nearest Neighbors (KNN) imputation is used as it imputes missing values based on the mean of the nearest neighbors.
+        This method ensures that the imputed values are consistent with the distribution of the data.
+        """)
+
+        from sklearn.impute import KNNImputer
+        numerical_features = ['LotFrontage', 'MasVnrArea', 'GarageYrBlt']
+        knn_imputer = KNNImputer(n_neighbors=5)
+        ames_data_cleaned[numerical_features] = knn_imputer.fit_transform(ames_data_cleaned[numerical_features])
+
+        st.write("Remaining missing values in numerical features:")
+        st.write(ames_data_cleaned[numerical_features].isnull().sum())
+
+        # Handle Missing Values in Categorical Features using Iterative Imputer
+        st.write("### Handling Missing Values for Categorical Features")
+        st.write("""
+        **Approach**: Iterative Imputation is used to predict missing categorical values by learning from other features. 
+        This is done after one-hot encoding categorical features and then decoding the imputed values back to original categories.
+        """)
+
+        from sklearn.experimental import enable_iterative_imputer
+        from sklearn.impute import IterativeImputer
+
+        categorical_features = ['MasVnrType', 'FireplaceQu', 'GarageType', 'GarageFinish', 
+                                'GarageQual', 'GarageCond', 'BsmtQual', 'BsmtCond', 
+                                'BsmtExposure', 'BsmtFinType1', 'BsmtFinType2', 'Electrical']
+
+        # Encode categorical features
+        encoded_data = pd.get_dummies(ames_data_cleaned[categorical_features], drop_first=True)
+        st.write(f"Categorical features expanded to {encoded_data.shape[1]} columns after one-hot encoding.")
+
+        # Apply Iterative Imputer
+        iterative_imputer = IterativeImputer(max_iter=10, random_state=0)
+        imputed_data = iterative_imputer.fit_transform(encoded_data)
+        imputed_df = pd.DataFrame(imputed_data, columns=encoded_data.columns)
+
+        # Decode imputed data back to categorical format
+        for feature in categorical_features:
+            feature_encoded_cols = [col for col in encoded_data.columns if feature in col]
+            reconstructed_data = imputed_df[feature_encoded_cols].idxmax(axis=1)
+            category_mapping = {col: col.split('_')[-1] for col in feature_encoded_cols}
+            ames_data_cleaned[feature] = reconstructed_data.map(category_mapping)
+
+        st.write("Categorical features imputed and decoded back to original categories.")
+
+        # Visualize Missing Data Heatmap After Cleaning
+        st.write("### Missing Data Heatmap After Cleaning")
+        fig, ax = plt.subplots(figsize=(12, 8))
+        sns.heatmap(ames_data_cleaned.isnull(), cbar=False, cmap='viridis', ax=ax)
+        ax.set_title("Post-Cleaning Missing Data Heatmap")
+        st.pyplot(fig)
+
+        # Final Cleaned Data Shape
+        st.write("### Final Cleaned Data Shape")
+        st.write(f"Rows: {ames_data_cleaned.shape[0]}, Columns: {ames_data_cleaned.shape[1]}")
+
+        # Show Cleaned Data
+        st.write("### Cleaned Dataset Preview")
+        st.dataframe(ames_data_cleaned.head())
+
+        # Download Cleaned Data
+        st.download_button(
+            label="Download Cleaned Ames Housing Data",
+            data=ames_data_cleaned.to_csv(index=False).encode('utf-8'),
+            file_name='ames_data_cleaned.csv',
+            mime='text/csv'
+        )
+
+    else:
+        st.subheader(f"{dataset_choice} Cleaning")
+        st.write("**No missing values detected. No cleaning required.**")
+        st.write(f"Rows: {cpi_data.shape[0] if dataset_choice == 'CPI Data' else inflation_data.shape[0] if dataset_choice == 'Inflation Rate Data' else gdp_data.shape[0]}")
+        st.write(f"Columns: {cpi_data.shape[1] if dataset_choice == 'CPI Data' else inflation_data.shape[1] if dataset_choice == 'Inflation Rate Data' else gdp_data.shape[1]}")
+
+        # Preview Dataset
+        st.write("### Dataset Preview")
+        st.dataframe(cpi_data.head() if dataset_choice == 'CPI Data' else inflation_data.head() if dataset_choice == 'Inflation Rate Data' else gdp_data.head())
+
+        # Download Dataset
+        st.download_button(
+            label=f"Download Cleaned {dataset_choice}",
+            data=cpi_data.to_csv(index=False).encode('utf-8') if dataset_choice == 'CPI Data' else inflation_data.to_csv(index=False).encode('utf-8') if dataset_choice == 'Inflation Rate Data' else gdp_data.to_csv(index=False).encode('utf-8'),
+            file_name=f"{dataset_choice.lower().replace(' ', '_')}_cleaned.csv",
+            mime='text/csv'
+        )
