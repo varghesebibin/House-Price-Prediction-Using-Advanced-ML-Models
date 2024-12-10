@@ -514,9 +514,19 @@ if sections == "Data Integration & Feature Engineering":
     st.write(f"Unique Years: {unique_years}")
     st.write(f"Year Range: {ames_data['YrSold'].min()} - {ames_data['YrSold'].max()}")
 
-    # Filtered Macroeconomic Data
-    st.markdown("### Filtered Macroeconomic Data")
-    st.write("The macroeconomic datasets have been filtered to include only the years 2006 to 2010, aligning with the `YrSold` range.")
+    # Filter datasets to align with YrSold range
+    cpi_filtered = cpi_data_cleaned[(cpi_data_cleaned['Year'] >= 2006) & (cpi_data_cleaned['Year'] <= 2010)]
+    inflation_filtered = inflation_data_cleaned[(inflation_data_cleaned['Year'] >= 2006) & (inflation_data_cleaned['Year'] <= 2010)]
+    gdp_filtered = gdp_data_cleaned[(gdp_data_cleaned['Year'] >= 2006) & (gdp_data_cleaned['Year'] <= 2010)]
+
+    # Display filtered datasets
+    st.markdown("### Filtered Datasets")
+    st.markdown("#### Filtered CPI Data")
+    st.write(cpi_filtered.head())
+    st.markdown("#### Filtered Inflation Data")
+    st.write(inflation_filtered.head())
+    st.markdown("#### Filtered GDP Data")
+    st.write(gdp_filtered.head())
 
     # Merge macroeconomic data
     st.markdown("#### Merging Datasets")
@@ -526,6 +536,26 @@ if sections == "Data Integration & Feature Engineering":
     - **Inflation Rate**: Adds economic context to house prices during the sale year.
     - **GDP**: Provides insights into economic growth trends during the sale period.
     """)
+
+     # Merge datasets with Ames Housing
+    st.markdown("### Merging Macroeconomic Indicators with Ames Housing Data")
+    ames_data = ames_data.merge(cpi_filtered[['Year', 'CPI']], left_on='YrSold', right_on='Year', how='left')
+    ames_data = ames_data.merge(inflation_filtered[['Year', 'Inflation_Rate']], left_on='YrSold', right_on='Year', how='left')
+    ames_data = ames_data.merge(gdp_filtered[['Year', 'GDP_Value (Trillions)']], left_on='YrSold', right_on='Year', how='left')
+
+    # Drop redundant year columns
+    ames_data = ames_data.drop(columns=['Year_x', 'Year_y', 'Year'])
+
+    st.markdown("#### Columns After Merging")
+    st.write(ames_data.columns.tolist())
+
+    # Feature Engineering
+    st.markdown("### Feature Engineering")
+    st.markdown("#### House Age Feature")
+    ames_data['House_Age'] = ames_data['YrSold'] - ames_data['YearBuilt']
+    ames_data.loc[ames_data['House_Age'] < 0, 'House_Age'] = 0  # Handle negative ages if any
+    st.markdown("- Created a new feature `House_Age` to capture the age of the house at the time of sale.")
+    st.write(ames_data[['YrSold', 'YearBuilt', 'House_Age']].head())
 
     # Inflation Adjusted Price Calculation
     st.markdown("""
@@ -537,8 +567,7 @@ if sections == "Data Integration & Feature Engineering":
     The 2010 CPI is used as the base (100). This calculation adjusts nominal house prices to account for inflation, enabling accurate comparisons across years.
     """)
 
-    # Calculate Inflation Adjusted Price
-    base_cpi = cpi_data[cpi_data['Year'] == 2010]['CPI'].values[0]
+    base_cpi = cpi_filtered[cpi_filtered['Year'] == 2010]['CPI'].values[0]
     ames_data['Inflation_Adjusted_Price'] = ames_data['SalePrice'] * (base_cpi / ames_data['CPI'])
 
     # Display Sample Data
