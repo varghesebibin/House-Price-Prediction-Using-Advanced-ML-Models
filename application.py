@@ -614,3 +614,120 @@ if sections == "Data Integration & Feature Engineering":
         mime='text/csv'
     )
 
+# Load Cleaned Merged Data
+@st.cache_data
+def load_merged_data():
+    ames_merged_data = pd.read_csv('ames_merged_data.csv')
+    return ames_merged_data
+
+# Load the data
+ames_data = load_merged_data()
+
+# Exploratory Data Analysis Section
+if sections == "Exploratory Data Analysis":
+    st.title("Exploratory Data Analysis")
+
+    # Price Comparison Over Time
+    st.markdown("### Nominal vs Inflation-Adjusted Prices Over Time")
+    price_comparison = ames_data.groupby('YrSold').agg(
+        Avg_SalePrice=('SalePrice', 'mean'),
+        Avg_Inflation_Adjusted_Price=('Inflation_Adjusted_Price', 'mean')
+    ).reset_index()
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.lineplot(data=price_comparison, x='YrSold', y='Avg_SalePrice', marker='o', label='Nominal Price', ax=ax)
+    sns.lineplot(data=price_comparison, x='YrSold', y='Avg_Inflation_Adjusted_Price', marker='o', label='Inflation-Adjusted Price', ax=ax)
+    ax.set_title('Nominal vs Inflation-Adjusted Prices (2006–2010)')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Price')
+    ax.legend()
+    ax.grid(True)
+    st.pyplot(fig)
+
+    st.markdown("""
+    Both the nominal and inflation-adjusted prices exhibit a downward trend from 2007 to 2008, potentially influenced by the 2008 financial crisis.
+    A slight recovery is observed in 2009, aligning with economic stabilization post-crisis.
+    """)
+
+    # Correlation Heatmap
+    st.markdown("### Correlation Heatmap: Economic Indicators and Housing Prices")
+    correlation_data = ames_data[['SalePrice', 'Inflation_Adjusted_Price', 'CPI', 'Inflation_Rate', 'GDP_Value (Trillions)']]
+    correlation_matrix = correlation_data.corr()
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    sns.heatmap(correlation_matrix, annot=True, cmap='YlGnBu', fmt=".2f", linewidths=0.5, ax=ax)
+    ax.set_title('Correlation Heatmap')
+    st.pyplot(fig)
+
+    st.markdown("""
+    **Key Observations:**
+    - SalePrice vs. Inflation_Adjusted_Price: Strong positive correlation (1.00), as expected since the adjusted price is derived from the nominal price.
+    - CPI's weak negative correlation with both SalePrice (-0.03) and Inflation_Adjusted_Price (-0.10) suggests minimal impact of CPI on housing prices.
+    - Inflation rate shows almost no correlation, indicating it was not a significant factor in price changes during 2006–2010.
+    - GDP has a weak positive correlation with housing prices, reflecting minor influence.
+    """)
+
+    # Univariate Analysis
+    st.markdown("### Univariate Analysis of SalePrice and Inflation-Adjusted Price")
+    # Distribution of SalePrice
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.histplot(ames_data['SalePrice'], kde=True, bins=30, color='blue', ax=ax)
+    ax.set_title('Distribution of SalePrice')
+    ax.set_xlabel('SalePrice')
+    ax.set_ylabel('Frequency')
+    st.pyplot(fig)
+
+    # Markdown for SalePrice
+    st.markdown("""
+    **Distribution of SalePrice:**
+    - The SalePrice distribution is right-skewed, indicating most houses are priced under $200,000, with a few high-value properties driving the long tail.
+    - This skewness suggests that a log transformation may help normalize the distribution during modeling.
+    """)
+
+    # Distribution of Inflation_Adjusted_Price
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.histplot(ames_data['Inflation_Adjusted_Price'], kde=True, bins=30, color='green', ax=ax)
+    ax.set_title('Distribution of Inflation-Adjusted Price')
+    ax.set_xlabel('Inflation-Adjusted Price')
+    ax.set_ylabel('Frequency')
+    st.pyplot(fig)
+
+    # Markdown for Inflation-Adjusted Price
+    st.markdown("""
+    **Distribution of Inflation-Adjusted Price:**
+    - The Inflation_Adjusted_Price shows a slightly smoother distribution compared to the nominal SalePrice.
+    - The adjustment reduces right skewness, aligning prices more with economic value at that time.
+    """)
+
+    # Correlations with Target Variables
+    st.markdown("### Feature Correlations with Target Variables")
+    numeric_data = ames_data.select_dtypes(include=['number'])
+    correlation_matrix = numeric_data.corr()
+    correlations = correlation_matrix[['SalePrice', 'Inflation_Adjusted_Price']].reset_index()
+    correlations = correlations.rename(columns={'index': 'Feature'})
+    tidy_correlations = correlations.melt(
+        id_vars='Feature', 
+        var_name='Target', 
+        value_name='Correlation'
+    )
+
+    correlation_plot = alt.Chart(tidy_correlations).mark_bar().encode(
+        x=alt.X('Correlation:Q', title='Correlation'),
+        y=alt.Y('Feature:N', sort='-x', title='Feature'),
+        color=alt.condition(
+            alt.datum.Correlation > 0,
+            alt.value('steelblue'),  # Positive correlations
+            alt.value('orange')     # Negative correlations
+        ),
+        tooltip=['Feature', 'Target', 'Correlation']
+    ).properties(
+        width=300
+    ).facet(
+        column=alt.Column('Target:N', title='Target Variable')
+    )
+
+    st.altair_chart(correlation_plot, use_container_width=True)
+    st.markdown("""
+    This visualization highlights the features most correlated with SalePrice and Inflation_Adjusted_Price, providing insights for feature selection during modeling.
+    """)
+
