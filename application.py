@@ -31,7 +31,12 @@ ames_data, cpi_data, inflation_data, gdp_data = load_data()
 st.sidebar.title("Navigation")
 sections = st.sidebar.radio(
     "Go to",
-    ["Dataset Overview", "Data Cleaning", "EDA and Visualization", "Feature Engineering", "Principal Component Analysis", "Model Buidling and Evaluation", "Predict House Price", "Real World Impact"]
+    [
+        "Dataset Overview", "EDA and Visualization", "Data Cleaning",
+        "Feature Engineering", "Principal Component Analysis", 
+        "Model Building and Evaluation", "Predict House Price", 
+        "Real World Impact"
+    ]
 )
 
 # Dataset Overview Section
@@ -47,7 +52,7 @@ if sections == 'Dataset Overview':
     # Ames Housing Data
     if dataset_choice == "Ames Housing Data":
         st.subheader("Ames Housing Data")
-        st.write("**Description**: This dataset contains information about residential houses in Ames, Iowa. It includes over 80 features describing various attributes like quality, size, location, and sale price, making it ideal for building house price prediction models.")
+        st.write("**Description**: Residential housing data from Ames, Iowa. Contains over 80 features related to house quality, size, location, and sale price.")
 
         # Display Basic Information in a Table
         st.write("### Basic Information")
@@ -74,12 +79,12 @@ if sections == 'Dataset Overview':
         st.write("""
         - **Total observations**: 1,460
         - **Total features**: 81
-        - **Numeric features**: 38 (e.g., LotFrontage, GrLivArea, GarageCars)
-        - **Categorical features**: 43 (e.g., MSZoning, Neighborhood, GarageType)
-        - **Target Variable**: `SalePrice` (numeric, no missing values)
+        - **Numeric features**: 38
+        - **Categorical features**: 43
+        - **Target Variable**: `SalePrice` (no missing values)
         """)
 
-         # Visualize Missing Data
+        # Visualize Missing Data
         st.write("### Missing Data Visualization")
         fig, ax = plt.subplots(figsize=(12, 6))
         sns.barplot(data=missing_df, x="Missing Value Percentage", y="Feature", ax=ax, color="skyblue")
@@ -117,7 +122,7 @@ if sections == 'Dataset Overview':
     # CPI Data
     elif dataset_choice == "CPI Data":
         st.subheader("CPI Data")
-        st.write("**Description**: Consumer Price Index (CPI) measures changes in the price level of consumer goods and services purchased by households over time. It serves as a key indicator of inflation trends and economic health.")
+        st.write("**Description**: Consumer Price Index (CPI) tracks price changes for goods and services purchased by households, a key indicator of inflation trends.")
 
         # Display Basic Information in a Table
         st.write("### Basic Information")
@@ -142,7 +147,7 @@ if sections == 'Dataset Overview':
     # Inflation Rate Data
     elif dataset_choice == "Inflation Rate Data":
         st.subheader("Inflation Rate Data")
-        st.write("**Description**: This dataset tracks the rate at which the general level of prices for goods and services rises, eroding purchasing power over time. It is an essential indicator for understanding economic trends and price stability.")
+        st.write("**Description**: Tracks the annual inflation rate, essential for understanding purchasing power changes.")
 
         # Display Basic Information in a Table
         st.write("### Basic Information")
@@ -167,7 +172,7 @@ if sections == 'Dataset Overview':
     # GDP Data
     elif dataset_choice == "GDP Data":
         st.subheader("GDP Data")
-        st.write("**Description**: Gross Domestic Product (GDP) measures the total economic output of a country. It provides insights into economic performance and growth trends over time.")
+        st.write("**Description**: Gross Domestic Product (GDP) measures a country's total economic output, a key economic indicator.")
 
         # Display Basic Information in a Table
         st.write("### Basic Information")
