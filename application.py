@@ -135,7 +135,7 @@ if sections == 'Dataset Overview':
 
     # CPI Data
     elif dataset_choice == "CPI Data":
-        st.subheader("CPI Data")
+        st.subheader("CPI Data (US Economy)")
         st.write("**Description**: Consumer Price Index (CPI) tracks price changes for goods and services purchased by households, a key indicator of inflation trends.")
 
         # Display Basic Information in a Table
@@ -160,7 +160,7 @@ if sections == 'Dataset Overview':
 
     # Inflation Rate Data
     elif dataset_choice == "Inflation Rate Data":
-        st.subheader("Inflation Rate Data")
+        st.subheader("Inflation Rate Data (US Economy)")
         st.write("**Description**: Tracks the annual inflation rate, essential for understanding purchasing power changes.")
 
         # Display Basic Information in a Table
@@ -185,7 +185,7 @@ if sections == 'Dataset Overview':
 
     # GDP Data
     elif dataset_choice == "GDP Data":
-        st.subheader("GDP Data")
+        st.subheader("GDP Data (US Economy)")
         st.write("**Description**: Gross Domestic Product (GDP) measures a country's total economic output, a key economic indicator.")
 
         # Display Basic Information in a Table
