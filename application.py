@@ -388,6 +388,11 @@ if sections == "Visualizations":
     ax.grid(True)
     st.pyplot(fig)
 
+    st.markdown("""
+    The Consumer Price Index (CPI) shows a clear upward trend, indicating inflation over the years. 
+    **In the U.S., housing accounts for about 45% of the core CPI basket**, highlighting the relevance of CPI in house price analysis.
+    """)
+
     # Inflation Rate Visualization
     st.subheader("Inflation Rate Trends Over Time")
     fig = px.line(
@@ -411,6 +416,11 @@ if sections == "Visualizations":
     )
     st.plotly_chart(fig)
 
+    st.markdown("""
+    This visualization highlights the high volatility in inflation rates during earlier years, with stabilization post-1950.
+    Understanding inflation rates helps in contextualizing house price trends and their real-world implications.
+    """)
+
     # GDP Visualization
     st.subheader("GDP Trends Over Time")
     alt_chart = alt.Chart(gdp_data).mark_line(point=True).encode(
@@ -424,6 +434,11 @@ if sections == "Visualizations":
     ).interactive()
     st.altair_chart(alt_chart)
 
+    st.markdown("""
+    The Gross Domestic Product (GDP) shows consistent growth over decades, with significant acceleration post-1950. 
+    Notable slowdowns occurred during the 2008 financial crisis, while a strong recovery is evident post-2020.
+    """)
+
     # Ames Housing Data Visualizations
     st.subheader("Ames Housing Data Visualizations")
 
@@ -435,6 +450,11 @@ if sections == "Visualizations":
     ax.set_xlabel('Sale Price')
     ax.set_ylabel('Density')
     st.pyplot(fig)
+
+    st.markdown("""
+    The distribution plot of house prices shows that the `SalePrice` variable is right-skewed, 
+    indicating that most houses are priced lower, but there are a few high-priced houses in the dataset.
+    """)
 
     # Scatter Plot
     st.write("### Scatter Plot of Sale Price vs Other Features")
@@ -449,6 +469,11 @@ if sections == "Visualizations":
     ax.set_ylabel('Sale Price')
     st.pyplot(fig)
 
+    st.markdown(f"""
+    The scatter plot shows the relationship between `{scatter_feature}` and `SalePrice`. 
+    This allows for a better understanding of how changes in `{scatter_feature}` might influence house prices.
+    """)
+
     # Boxplot for Overall Quality vs Sale Price
     st.write("### Boxplot of Overall Quality vs Sale Price")
     fig, ax = plt.subplots()
@@ -457,3 +482,9 @@ if sections == "Visualizations":
     ax.set_xlabel('Overall Quality')
     ax.set_ylabel('Sale Price')
     st.pyplot(fig)
+
+    st.markdown("""
+    The boxplot above shows that houses with higher quality ratings tend to have higher sale prices.
+    Notably, the median sale price increases consistently with the quality rating (1-10), and there are several outliers, 
+    especially in lower quality categories (see OverallQual = 5), where a few houses are priced much higher than the majority of houses with the same quality rating (OverallQual 6 &7).
+    """)
