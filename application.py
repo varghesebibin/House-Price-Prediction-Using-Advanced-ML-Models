@@ -35,8 +35,8 @@ st.sidebar.title("Navigation")
 sections = st.sidebar.radio(
     "Go to",
     [
-        "Dataset Overview", "Data Cleaning", "EDA and Visualization",
-        "Feature Engineering", "Principal Component Analysis", 
+        "Dataset Overview", "Data Cleaning", "Visualizations",
+        "Feature Engineering", "Exploratory Data Analysis", "Principal Component Analysis", 
         "Model Building and Evaluation", "Predict House Price", 
         "Real World Impact"
     ]
@@ -360,3 +360,99 @@ if sections == 'Data Cleaning':
             file_name=f"{dataset_choice.lower().replace(' ', '_')}_cleaned.csv",
             mime='text/csv'
         )
+
+# Load cleaned data function (reusable and hidden from UI)
+@st.cache_data
+def load_cleaned_data():
+    ames_data_cleaned = pd.read_csv('ames_data_cleaned.csv')
+    cpi_data_cleaned = pd.read_csv('cpi_data_cleaned.csv')
+    inflation_data_cleaned = pd.read_csv('inflation_data_cleaned.csv')
+    gdp_data_cleaned = pd.read_csv('gdp_data_cleaned.csv')
+    return ames_data_cleaned, cpi_data_cleaned, inflation_data_cleaned, gdp_data_cleaned
+
+# Load datasets globally (hidden from UI)
+ames_data, cpi_data, inflation_data, gdp_data = load_cleaned_data()
+
+# Visualizations Section
+if sections == "Visualizations":
+    st.title("Visualizations")
+
+    # CPI Visualization
+    st.subheader("CPI Trends Over Time")
+    fig, ax = plt.subplots(figsize=(12, 8))
+    sns.lineplot(data=cpi_data, x='Year', y='CPI', marker='o', color='green', label='CPI', ax=ax)
+    ax.set_title('CPI Trends Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Consumer Price Index (CPI)')
+    ax.grid(True)
+    st.pyplot(fig)
+
+    # Inflation Rate Visualization
+    st.subheader("Inflation Rate Trends Over Time")
+    fig = px.line(
+        inflation_data,
+        x='Year',
+        y='Inflation_Rate',
+        title='Inflation Rates Over Time',
+        labels={'Inflation_Rate': 'Inflation Rate (%)', 'Year': 'Year'},
+        markers=True
+    )
+    fig.update_traces(
+        line=dict(color='blue', width=2),
+        marker=dict(size=6, symbol='circle', color='red')
+    )
+    fig.update_layout(
+        hovermode='x unified',
+        title_font=dict(size=22, family='Arial', color='darkblue'),
+        xaxis=dict(title='Year', showgrid=True),
+        yaxis=dict(title='Inflation Rate (%)', showgrid=True),
+        template='plotly_white'
+    )
+    st.plotly_chart(fig)
+
+    # GDP Visualization
+    st.subheader("GDP Trends Over Time")
+    alt_chart = alt.Chart(gdp_data).mark_line(point=True).encode(
+        x=alt.X('Year:Q', title='Year'),
+        y=alt.Y('GDP_Value (Trillions):Q', title='GDP (in Trillions)'),
+        tooltip=['Year', 'GDP_Value (Trillions)']
+    ).properties(
+        title='GDP Trends Over Time',
+        width=800,
+        height=400
+    ).interactive()
+    st.altair_chart(alt_chart)
+
+    # Ames Housing Data Visualizations
+    st.subheader("Ames Housing Data Visualizations")
+
+    # Distribution of SalePrice
+    st.write("### Distribution of Sale Prices")
+    fig, ax = plt.subplots()
+    sns.histplot(ames_data['SalePrice'], kde=True, ax=ax)
+    ax.set_title('Distribution of Sale Prices')
+    ax.set_xlabel('Sale Price')
+    ax.set_ylabel('Density')
+    st.pyplot(fig)
+
+    # Scatter Plot
+    st.write("### Scatter Plot of Sale Price vs Other Features")
+    numeric_cols = ames_data.select_dtypes(include=['float64', 'int64']).columns.tolist()
+    numeric_cols.remove('SalePrice')  # Remove SalePrice from the options
+    scatter_feature = st.selectbox("Select a feature to compare with SalePrice:", numeric_cols)
+    
+    fig, ax = plt.subplots()
+    sns.scatterplot(data=ames_data, x=scatter_feature, y='SalePrice', ax=ax)
+    ax.set_title(f'Scatter Plot of {scatter_feature} vs Sale Price')
+    ax.set_xlabel(scatter_feature)
+    ax.set_ylabel('Sale Price')
+    st.pyplot(fig)
+
+    # Boxplot for Overall Quality vs Sale Price
+    st.write("### Boxplot of Overall Quality vs Sale Price")
+    fig, ax = plt.subplots()
+    sns.boxplot(data=ames_data, x='OverallQual', y='SalePrice', ax=ax)
+    ax.set_title('Boxplot of Overall Quality vs Sale Price')
+    ax.set_xlabel('Overall Quality')
+    ax.set_ylabel('Sale Price')
+    st.pyplot(fig)
