@@ -37,7 +37,7 @@ sections = st.sidebar.radio(
     "Go to",
     [
         "Dataset Overview", "Data Cleaning", "Visualizations",
-        "Feature Engineering", "Exploratory Data Analysis", "Principal Component Analysis", 
+        "Data Integration & Feature Engineering", "Exploratory Data Analysis", "Principal Component Analysis", 
         "Model Building and Evaluation", "Predict House Price", 
         "Real World Impact"
     ]
@@ -488,3 +488,99 @@ if sections == "Visualizations":
     Notably, the median sale price increases consistently with the quality rating (1-10), and there are several outliers, 
     especially in lower quality categories (see OverallQual = 5), where a few houses are priced much higher than the majority of houses with the same quality rating (OverallQual 6 &7).
     """)
+
+# Data Integration & Feature Engineering Section
+if sections == "Data Integration & Feature Engineering":
+    st.title("Data Integration & Feature Engineering")
+
+    # Markdown: Integration Overview
+    st.markdown("""
+    ### Integration Overview
+    The aim is to enhance the Ames Housing dataset by incorporating macroeconomic indicators such as **CPI**, **Inflation Rate**, 
+    and **GDP** for the years corresponding to the house sale (`YrSold`). These features help to analyze and adjust house prices 
+    in the context of economic trends.
+    """)
+
+    # Explanation for Using `YrSold`
+    st.markdown("""
+    **Why `YrSold`?**
+    - The `YrSold` feature directly corresponds to the transaction year when the house price (`SalePrice`) was finalized.
+    - This makes it the most relevant feature for linking house price data with macroeconomic indicators like GDP, CPI, and Inflation.
+    """)
+
+    # Display Unique Years in YrSold
+    unique_years = ames_data['YrSold'].unique()
+    st.markdown("#### Unique Years in Ames Housing Data (`YrSold`)")
+    st.write(f"Unique Years: {unique_years}")
+    st.write(f"Year Range: {ames_data['YrSold'].min()} - {ames_data['YrSold'].max()}")
+
+    # Filtered Macroeconomic Data
+    st.markdown("### Filtered Macroeconomic Data")
+    st.write("The macroeconomic datasets have been filtered to include only the years 2006 to 2010, aligning with the `YrSold` range.")
+
+    # Merge macroeconomic data
+    st.markdown("#### Merging Datasets")
+    st.markdown("""
+    The following macroeconomic indicators are merged with the Ames Housing dataset:
+    - **CPI**: Merged using `YrSold` to calculate inflation-adjusted prices.
+    - **Inflation Rate**: Adds economic context to house prices during the sale year.
+    - **GDP**: Provides insights into economic growth trends during the sale period.
+    """)
+
+    # Inflation Adjusted Price Calculation
+    st.markdown("""
+    ### Inflation Adjusted Price Calculation
+    Using the formula:
+    $$
+    Inflation\\ Adjusted\\ Price = SalePrice \\times \\left( \\frac{Base\\ CPI (2010)}{CPI\\ for\\ YrSold} \\right)
+    $$
+    The 2010 CPI is used as the base (100). This calculation adjusts nominal house prices to account for inflation, enabling accurate comparisons across years.
+    """)
+
+    # Calculate Inflation Adjusted Price
+    base_cpi = cpi_data[cpi_data['Year'] == 2010]['CPI'].values[0]
+    ames_data['Inflation_Adjusted_Price'] = ames_data['SalePrice'] * (base_cpi / ames_data['CPI'])
+
+    # Display Sample Data
+    st.markdown("#### Sample of Data After Integration")
+    st.write(ames_data[['YrSold', 'YearBuilt', 'House_Age', 'SalePrice', 'Inflation_Adjusted_Price', 'CPI', 'Inflation_Rate', 'GDP_Value (Trillions)']].head())
+
+    # Reasoning Behind Feature Engineering
+    st.markdown("""
+    ### Reasoning Behind Feature Engineering
+    1. **House Age**:
+       - Calculated as the difference between `YrSold` and `YearBuilt`.
+       - A critical predictor, as newer houses tend to have higher sale prices.
+       - Any negative values (possible due to inconsistent data) are set to zero.
+    2. **Inflation Adjusted Price**:
+       - Accounts for the change in purchasing power over time.
+       - Nominal prices are adjusted using CPI to make house prices comparable across years.
+    """)
+
+    # Visualize Inflation Adjusted Prices
+    st.markdown("#### Visualization: Nominal vs. Inflation Adjusted Prices")
+    fig, ax = plt.subplots(figsize=(12, 8))
+    sns.scatterplot(data=ames_data, x='SalePrice', y='Inflation_Adjusted_Price', hue='YrSold', palette='viridis', ax=ax)
+    ax.set_title('Nominal vs. Inflation Adjusted Prices')
+    ax.set_xlabel('Nominal Sale Price')
+    ax.set_ylabel('Inflation Adjusted Price')
+    st.pyplot(fig)
+
+    st.markdown("""
+    The scatter plot illustrates the relationship between nominal sale prices and inflation-adjusted prices.
+    For earlier years (2006–2008), inflation-adjusted prices are slightly higher due to lower CPI values relative to 2010.
+    """)
+
+    # Columns in Final Dataset
+    st.markdown("#### Final Dataset Columns")
+    st.write(ames_data.columns.tolist())
+
+    # Download Final Integrated Dataset
+    st.markdown("### Download Final Integrated Dataset")
+    st.download_button(
+        label="Download Integrated Dataset",
+        data=ames_data.to_csv(index=False).encode('utf-8'),
+        file_name='ames_data_integrated.csv',
+        mime='text/csv'
+    )
+
