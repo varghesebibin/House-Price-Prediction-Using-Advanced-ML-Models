@@ -1124,8 +1124,6 @@ if sections == "Model Building and Evaluation":
 
 # Predict House Price Section
 if sections == "Predict House Price":
-    import numpy as np
-
     st.title("Predict House Price")
     st.markdown("""
     Use this section to predict house prices using one of six trained models:
@@ -1137,25 +1135,20 @@ if sections == "Predict House Price":
     - **Gradient Boosting Regression**
     """)
 
-    # Perform log transformation for features (if not already done)
-    st.markdown("#### Checking and Performing Log Transformations for Skewed Features")
-    skewed_features = ['GrLivArea', '1stFlrSF', 'TotRmsAbvGrd', 'House_Age']  # Removed TotalBsmtSF
-    for feature in skewed_features:
-        log_feature = f'Log_{feature}'
-        if log_feature not in ames_data.columns:
-            ames_data[log_feature] = ames_data[feature].apply(lambda x: np.log1p(x))
-            st.write(f"Log transformation applied for {feature}")
+    # Define original features corresponding to log-transformed features
+    original_features = {
+        'Log_GrLivArea': 'GrLivArea',
+        'Log_1stFlrSF': '1stFlrSF',
+        'Log_TotRmsAbvGrd': 'TotRmsAbvGrd',
+        'Log_House_Age': 'House_Age'
+    }
 
-    # Check if all required features exist
+    # Define required features for prediction (including original for log-transformed)
     required_features = [
-        'OverallQual', 'Log_GrLivArea', 'GarageCars', 'GarageArea', 
-        'Log_1stFlrSF', 'FullBath', 'YearBuilt', 'Log_TotRmsAbvGrd', 
-        'YearRemodAdd', 'Log_House_Age'
-    ]  # Aligned with features used in model building
-    missing_features = [feature for feature in required_features if feature not in ames_data.columns]
-    if missing_features:
-        st.error(f"Missing required features for prediction: {', '.join(missing_features)}")
-        st.stop()
+        'OverallQual', 'GrLivArea', 'GarageCars', 'GarageArea', 
+        '1stFlrSF', 'FullBath', 'YearBuilt', 'TotRmsAbvGrd', 
+        'YearRemodAdd', 'House_Age'
+    ]
 
     # Model selection
     model_choice = st.selectbox("Select a Model for Prediction", [
@@ -1180,21 +1173,27 @@ if sections == "Predict House Price":
     with open(model_file, 'rb') as file:
         model = pickle.load(file)
 
-    # Input values for prediction
+    # Input values for prediction (showing original features for user)
     st.markdown("### Input House Features")
     input_data = {}
     for feature in required_features:
-        if feature in ames_data.columns:
-            min_val = float(ames_data[feature].min())
-            max_val = float(ames_data[feature].max())
-            input_data[feature] = st.slider(
-                f"{feature}", min_val, max_val, float((min_val + max_val) / 2)
-            )
+        min_val = float(ames_data[feature].min())
+        max_val = float(ames_data[feature].max())
+        input_data[feature] = st.slider(
+            f"{feature}", min_val, max_val, float((min_val + max_val) / 2)
+        )
+
+    # Convert original inputs to log-transformed values where needed
+    transformed_input_data = {}
+    for feature, value in input_data.items():
+        if feature in original_features.values():
+            transformed_feature = [k for k, v in original_features.items() if v == feature][0]
+            transformed_input_data[transformed_feature] = np.log1p(value)  # Apply log transformation
         else:
-            st.warning(f"{feature} is not available in the dataset.")
+            transformed_input_data[feature] = value
 
     # Convert inputs to DataFrame for prediction
-    input_df = pd.DataFrame([input_data])
+    input_df = pd.DataFrame([transformed_input_data])
 
     # Make prediction
     log_price_pred = model.predict(input_df)
