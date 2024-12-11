@@ -784,7 +784,7 @@ if sections == "Feature Transformation and Outlier Analysis":
 
     skewed_features = ['TotalBsmtSF', '1stFlrSF', 'GrLivArea', 'TotRmsAbvGrd', 'House_Age']
     for feature in skewed_features:
-    ames_data[f'Log_{feature}'] = np.log1p(ames_data[feature])
+        ames_data[f'Log_{feature}'] = np.log1p(ames_data[feature])
 
     # Visualize Transformed Feature Distributions
     features_to_plot = ['Log_SalePrice', 'Log_Inflation_Adjusted_Price'] + [f'Log_{feature}' for feature in skewed_features]
