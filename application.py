@@ -1183,9 +1183,9 @@ if sections == "Predict House Price":
         min_val = float(ames_data[feature].min())
         max_val = float(ames_data[feature].max())
         if feature in integer_features:
-            input_data[feature] = st.slider(f"{feature} (Integer)", int(min_val), int(max_val), int((min_val + max_val) / 2))
+            input_data[feature] = st.slider(f"{feature}", int(min_val), int(max_val), int((min_val + max_val) / 2))
         else:
-            input_data[feature] = st.slider(f"{feature} (Float)", min_val, max_val, float((min_val + max_val) / 2))
+            input_data[feature] = st.slider(f"{feature}", min_val, max_val, float((min_val + max_val) / 2))
 
     # Convert original inputs to log-transformed values where needed
     transformed_input_data = {}
