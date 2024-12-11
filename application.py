@@ -700,18 +700,18 @@ if sections == "Exploratory Data Analysis":
     """)
 
     # Correlations with Target Variables
-st.markdown("### Feature Correlations with Target Variables")
-numeric_data = ames_data.select_dtypes(include=['number'])
-correlation_matrix = numeric_data.corr()
-correlations = correlation_matrix[['SalePrice', 'Inflation_Adjusted_Price']].reset_index()
-correlations = correlations.rename(columns={'index': 'Feature'})
-tidy_correlations = correlations.melt(
+    st.markdown("### Feature Correlations with Target Variables")
+    numeric_data = ames_data.select_dtypes(include=['number'])
+    correlation_matrix = numeric_data.corr()
+    correlations = correlation_matrix[['SalePrice', 'Inflation_Adjusted_Price']].reset_index()
+    correlations = correlations.rename(columns={'index': 'Feature'})
+    tidy_correlations = correlations.melt(
     id_vars='Feature', 
     var_name='Target', 
     value_name='Correlation'
-)
+    )
 
-correlation_plot = alt.Chart(tidy_correlations).mark_bar().encode(
+    correlation_plot = alt.Chart(tidy_correlations).mark_bar().encode(
     x=alt.X('Correlation:Q', title='Correlation'),
     y=alt.Y('Feature:N', sort='-x', title='Feature'),
     color=alt.condition(
@@ -720,56 +720,56 @@ correlation_plot = alt.Chart(tidy_correlations).mark_bar().encode(
         alt.value('orange')     # Negative correlations
     ),
     tooltip=['Feature', 'Target', 'Correlation']
-).properties(
+    ).properties(
     width=300
-).facet(
+    ).facet(
     column=alt.Column('Target:N', title='Target Variable')
-)
+    )
 
-st.altair_chart(correlation_plot, use_container_width=True)
-st.markdown("""
-This visualization highlights the features most correlated with SalePrice and Inflation_Adjusted_Price, providing insights for feature selection during modeling.
-""")
+    st.altair_chart(correlation_plot, use_container_width=True)
+    st.markdown("""
+    This visualization highlights the features most correlated with SalePrice and Inflation_Adjusted_Price, providing insights for feature selection during modeling.
+    """)
 
-# Markdown for Key Feature Correlations
-st.markdown("""
-### Key Feature Correlations
+    # Markdown for Key Feature Correlations
+    st.markdown("""
+    ### Key Feature Correlations
 
-#### Features with Correlation > 0.5 with SalePrice:
-- **SalePrice**: 1.000 (Self-correlation)
-- **Inflation_Adjusted_Price**: 0.998
-- **OverallQual**: 0.791
-- **GrLivArea**: 0.709
-- **GarageCars**: 0.640
-- **GarageArea**: 0.623
-- **TotalBsmtSF**: 0.614
-- **1stFlrSF**: 0.606
-- **FullBath**: 0.561
-- **TotRmsAbvGrd**: 0.534
-- **YearBuilt**: 0.523
-- **YearRemodAdd**: 0.507
+    #### Features with Correlation > 0.5 with SalePrice:
+    - **SalePrice**: 1.000 (Self-correlation)
+    - **Inflation_Adjusted_Price**: 0.998
+    - **OverallQual**: 0.791
+    - **GrLivArea**: 0.709
+    - **GarageCars**: 0.640
+    - **GarageArea**: 0.623
+    - **TotalBsmtSF**: 0.614
+    - **1stFlrSF**: 0.606
+    - **FullBath**: 0.561
+    - **TotRmsAbvGrd**: 0.534
+    - **YearBuilt**: 0.523
+    - **YearRemodAdd**: 0.507
 
-#### Features with Correlation > 0.5 with Inflation_Adjusted_Price:
-- **Inflation_Adjusted_Price**: 1.000 (Self-correlation)
-- **SalePrice**: 0.998
-- **OverallQual**: 0.788
-- **GrLivArea**: 0.709
-- **GarageCars**: 0.640
-- **GarageArea**: 0.622
-- **TotalBsmtSF**: 0.611
-- **1stFlrSF**: 0.604
-- **FullBath**: 0.560
-- **TotRmsAbvGrd**: 0.533
-- **YearBuilt**: 0.521
-- **YearRemodAdd**: 0.502
+    #### Features with Correlation > 0.5 with Inflation_Adjusted_Price:
+    - **Inflation_Adjusted_Price**: 1.000 (Self-correlation)
+    - **SalePrice**: 0.998
+    - **OverallQual**: 0.788
+    - **GrLivArea**: 0.709
+    - **GarageCars**: 0.640
+    - **GarageArea**: 0.622
+    - **TotalBsmtSF**: 0.611
+    - **1stFlrSF**: 0.604
+    - **FullBath**: 0.560
+    - **TotRmsAbvGrd**: 0.533
+    - **YearBuilt**: 0.521
+    - **YearRemodAdd**: 0.502
 
-#### Top 3 Negatively Correlated Features with SalePrice:
-- **House_Age**: -0.523
-- **KitchenAbvGr**: -0.136
-- **EnclosedPorch**: -0.129
+    #### Top 3 Negatively Correlated Features with SalePrice:
+    - **House_Age**: -0.523
+    - **KitchenAbvGr**: -0.136
+    - **EnclosedPorch**: -0.129
 
-#### Top 3 Negatively Correlated Features with Inflation_Adjusted_Price:
-- **House_Age**: -0.524
-- **KitchenAbvGr**: -0.136
-- **EnclosedPorch**: -0.127
-""")
+    #### Top 3 Negatively Correlated Features with Inflation_Adjusted_Price:
+    - **House_Age**: -0.524
+    - **KitchenAbvGr**: -0.136
+    - **EnclosedPorch**: -0.127
+    """)
