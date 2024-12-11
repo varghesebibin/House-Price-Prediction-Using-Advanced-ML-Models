@@ -730,4 +730,47 @@ if sections == "Exploratory Data Analysis":
     st.markdown("""
     This visualization highlights the features most correlated with SalePrice and Inflation_Adjusted_Price, providing insights for feature selection during modeling.
     """)
+    
+    # Markdown for Key Feature Correlations
+    st.markdown("""
+    ### Key Feature Correlations
 
+    #### Features with Correlation > 0.5 with SalePrice:
+    - **SalePrice**: 1.000 (Self-correlation)
+    - **Inflation_Adjusted_Price**: 0.998
+    - **OverallQual**: 0.791
+    -**GrLivArea**: 0.709
+    - **GarageCars**: 0.640
+    - **GarageArea**: 0.623
+    - **TotalBsmtSF**: 0.614
+    - **1stFlrSF**: 0.606
+    - **FullBath**: 0.561
+    -**TotRmsAbvGrd**: 0.534
+    - **YearBuilt**: 0.523
+    -**YearRemodAdd**: 0.507
+
+    #### Features with Correlation > 0.5 with Inflation_Adjusted_Price:
+    - **Inflation_Adjusted_Price**: 1.000 (Self-correlation)
+    - **SalePrice**: 0.998
+    - **OverallQual**: 0.788
+        - **GrLivArea**: 0.709
+- **GarageCars**: 0.640
+    - **GarageArea**: 0.622
+    - **TotalBsmtSF**: 0.611
+    - **1stFlrSF**: 0.604
+    - **FullBath**: 0.560
+    - **TotRmsAbvGrd**: 0.533
+    - **YearBuilt**: 0.521
+    - **YearRemodAdd**: 0.502
+
+    #### Top 3 Negatively Correlated Features with SalePrice:
+    - **House_Age**: -0.523
+    - **KitchenAbvGr**: -0.136
+    - **EnclosedPorch**: -0.129
+
+    #### Top 3 Negatively Correlated Features with Inflation_Adjusted_Price:
+    - **House_Age**: -0.524
+    - **KitchenAbvGr**: -0.136
+    - **EnclosedPorch**: -0.127
+    """)
+  
