@@ -1013,3 +1013,154 @@ if sections == "Principal Component Analysis":
             file_name='ames_data_with_pca.csv',
             mime='text/csv'
         )
+
+import pickle
+
+# Ensure model files and features are defined
+model_files = {
+    'Linear Regression': 'linear_regression.pkl',
+    'Ridge Regression': 'ridge_regression.pkl',
+    'Lasso Regression': 'lasso_regression.pkl',
+    'Elastic Net Regression': 'elastic_net_regression.pkl',
+    'Random Forest Regression': 'random_forest_regression.pkl',
+    'Gradient Boosting Regression': 'gradient_boosting_regression.pkl'
+}
+
+features = [
+    'OverallQual', 'Log_GrLivArea', 'GarageCars', 'GarageArea', 'Log_1stFlrSF',
+    'FullBath', 'YearBuilt', 'Log_TotRmsAbvGrd', 'YearRemodAdd', 'Log_House_Age'
+]
+
+# Model Building and Evaluation Section
+if sections == "Model Building and Evaluation":
+    st.title("Model Building and Evaluation")
+    st.markdown("### Overview")
+    st.markdown("""
+    This section evaluates six models trained to predict house prices using 10 features:
+    - **OverallQual**
+    - **Log_GrLivArea**
+    - **GarageCars**
+    - **GarageArea**
+    - **Log_1stFlrSF**
+    - **FullBath**
+    - **YearBuilt**
+    - **Log_TotRmsAbvGrd**
+    - **YearRemodAdd**
+    - **Log_House_Age**
+    
+    Target Variable: **Log-Inflation Adjusted Price**
+    """)
+
+    st.markdown("### Evaluation Metrics")
+    st.markdown("""
+    The following metrics evaluate each model:
+    - **Mean Absolute Error (MAE)**: Average of absolute prediction errors.
+    - **Root Mean Squared Error (RMSE)**: Emphasizes larger prediction errors.
+    - **R² Score**: Proportion of target variable variance explained by the model.
+    """)
+
+    # Display the evaluation summary
+    st.markdown("### Model Results Summary")
+    results_df = pd.DataFrame({
+        'Model': [
+            'Baseline Linear Regression',
+            'Ridge Regression',
+            'Lasso Regression',
+            'Elastic Net Regression',
+            'Random Forest Regression',
+            'Gradient Boosting Regression'
+        ],
+        'MAE': [0.13, 0.13, 0.13, 0.13, 0.12, 0.12],
+        'RMSE': [0.18, 0.18, 0.19, 0.18, 0.17, 0.17],
+        'R²': [0.84, 0.84, 0.82, 0.84, 0.84, 0.84]
+    })
+    st.dataframe(results_df, width=800)
+
+    st.markdown("""
+    - **Random Forest Regression** and **Gradient Boosting Regression** perform the best with MAE: 0.12, RMSE: 0.17, and R²: 0.84.
+    - **Lasso Regression** has a slightly lower R², indicating reduced predictive power.
+    """)
+
+    # Hyperparameter Tuning Insights
+    st.markdown("### Hyperparameter Tuning Insights")
+    st.markdown("""
+    - **Ridge Regression Best Alpha**: 0.1
+    - **Lasso Regression Best Alpha**: 0.01
+    - **Elastic Net Best Alpha**: 0.01, **L1 Ratio**: 0.1
+    - **Random Forest Best Parameters**:
+        - `n_estimators`: 300, `max_depth`: 20, `min_samples_split`: 5, `min_samples_leaf`: 2
+    - **Gradient Boosting Best Parameters**:
+        - `n_estimators`: 200, `learning_rate`: 0.1, `max_depth`: 3
+    """)
+
+    # Feature Importance
+    st.markdown("### Feature Importance from Ensemble Models")
+    if "random_forest_regression.pkl" in model_files.values():
+        with open("random_forest_regression.pkl", "rb") as file:
+            rf_model = pickle.load(file)
+        feature_importance_rf = pd.DataFrame({
+            'Feature': features,
+            'Importance': rf_model.feature_importances_
+        }).sort_values(by='Importance', ascending=False)
+        st.write("#### Random Forest Feature Importance")
+        st.bar_chart(feature_importance_rf.set_index('Feature'))
+
+    if "gradient_boosting_regression.pkl" in model_files.values():
+        with open("gradient_boosting_regression.pkl", "rb") as file:
+            gb_model = pickle.load(file)
+        feature_importance_gb = pd.DataFrame({
+            'Feature': features,
+            'Importance': gb_model.feature_importances_
+        }).sort_values(by='Importance', ascending=False)
+        st.write("#### Gradient Boosting Feature Importance")
+        st.bar_chart(feature_importance_gb.set_index('Feature'))
+
+    st.markdown("""
+    ### Best Model
+    Both **Random Forest Regression** and **Gradient Boosting Regression** are top contenders, with Random Forest offering better interpretability.
+    """)
+
+# Predict House Price Section
+if sections == "Predict House Price":
+    st.title("Predict House Price")
+    st.markdown("""
+    Use this section to predict house prices using one of six trained models:
+    - **Linear Regression**
+    - **Ridge Regression**
+    - **Lasso Regression**
+    - **Elastic Net Regression**
+    - **Random Forest Regression**
+    - **Gradient Boosting Regression**
+    """)
+
+    # Model selection
+    model_choice = st.selectbox("Select a Model for Prediction", [
+        'Linear Regression',
+        'Ridge Regression',
+        'Lasso Regression',
+        'Elastic Net Regression',
+        'Random Forest Regression',
+        'Gradient Boosting Regression'
+    ])
+
+    # Load the selected model
+    model_file = model_files[model_choice]
+    with open(model_file, 'rb') as file:
+        model = pickle.load(file)
+
+    # Input values for prediction
+    st.markdown("### Input House Features")
+    input_data = {}
+    for feature in features:
+        min_val = float(ames_data[feature].min())
+        max_val = float(ames_data[feature].max())
+        input_data[feature] = st.slider(f"{feature}", min_val, max_val, float((min_val + max_val) / 2))
+
+    # Convert inputs to DataFrame for prediction
+    input_df = pd.DataFrame([input_data])
+
+    # Make prediction
+    log_price_pred = model.predict(input_df)
+    price_pred = np.expm1(log_price_pred)  # Convert log price back to original scale
+
+    st.markdown(f"### Predicted House Price: ${price_pred[0]:,.2f}")
