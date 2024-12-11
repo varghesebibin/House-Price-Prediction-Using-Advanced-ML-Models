@@ -778,28 +778,38 @@ if sections == "Exploratory Data Analysis":
 if sections == "Feature Transformation and Outlier Analysis":
     st.title("Feature Transformation and Outlier Analysis")
 
-    # Log Transformation
-    st.markdown("### Log Transformation for Skewed Features")
+    # Log Transformation for Skewed Features
     ames_data['Log_SalePrice'] = np.log1p(ames_data['SalePrice'])
     ames_data['Log_Inflation_Adjusted_Price'] = np.log1p(ames_data['Inflation_Adjusted_Price'])
 
     skewed_features = ['TotalBsmtSF', '1stFlrSF', 'GrLivArea', 'TotRmsAbvGrd', 'House_Age']
     for feature in skewed_features:
-        ames_data[f'Log_{feature}'] = np.log1p(ames_data[feature])
+    ames_data[f'Log_{feature}'] = np.log1p(ames_data[feature])
 
-    st.markdown("""
-    Log transformations reduce skewness and stabilize feature distributions, making them more suitable for modeling.
-    """)
-    
-    # Visualize transformed distributions
-    st.write("#### Transformed Feature Distributions")
+    # Visualize Transformed Feature Distributions
     features_to_plot = ['Log_SalePrice', 'Log_Inflation_Adjusted_Price'] + [f'Log_{feature}' for feature in skewed_features]
-    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+
+    # Calculate rows and columns for subplots
+    n_features = len(features_to_plot)
+    n_cols = 3  # Number of columns
+    n_rows = (n_features // n_cols) + (n_features % n_cols > 0)  # Calculate rows
+
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(15, 5 * n_rows))  # Adjust figure size dynamically
+    axes = axes.flatten()  # Flatten axes for easy iteration
+
     for i, feature in enumerate(features_to_plot):
-        sns.histplot(ames_data[feature], kde=True, ax=axes[i // 3, i % 3], color='blue', alpha=0.7)
-        axes[i // 3, i % 3].set_title(f"Distribution of {feature}")
+        sns.histplot(ames_data[feature], kde=True, ax=axes[i], color='blue', alpha=0.7)
+        axes[i].set_title(f"Distribution of {feature}")
+        axes[i].set_xlabel(feature)
+        axes[i].set_ylabel("Frequency")
+
+    # Hide unused axes
+    for j in range(i + 1, len(axes)):
+        fig.delaxes(axes[j])
+
     plt.tight_layout()
     st.pyplot(fig)
+
 
     # Outlier Analysis Using Boxplots
     st.markdown("### Outlier Analysis")
