@@ -43,7 +43,7 @@ sections = st.sidebar.radio(
     [
         "Introduction", "Dataset Overview", "Data Cleaning", "Visualizations",
         "Data Integration & Feature Engineering", "Exploratory Data Analysis", "Feature Transformation and Outlier Analysis", "Principal Component Analysis", 
-        "Model Building and Evaluation", "Predict House Price", "Real World Impact"
+        "Model Building and Evaluation", "Predict House Price", "Real World Application and Impact"
     ]
 )
 
@@ -51,7 +51,7 @@ if sections == "Introduction":
     st.title("Welcome to the House Price Prediction App!")
 
     # Add an image
-    st.image("intro_image.jpg", caption="Discover Your Dream House Value", use_container_width=True)
+    st.image("intro_image.jpg", caption="Discover Your Dream House Value")
 
     st.markdown("""
     ### About the App
