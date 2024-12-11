@@ -774,61 +774,93 @@ if sections == "Exploratory Data Analysis":
     - **EnclosedPorch**: -0.127
     """)
 
+
 # Feature Transformation and Outlier Analysis Section
 if sections == "Feature Transformation and Outlier Analysis":
     st.title("Feature Transformation and Outlier Analysis")
 
-    # Log Transformation for Skewed Features
-    ames_data['Log_SalePrice'] = np.log1p(ames_data['SalePrice'])
+    # Log Transformation
+    st.markdown("### Log Transformation for Skewed Features and Target Variables")
+    ames_data['Log_SalePrice'] = np.log1p(ames_data['SalePrice'])  # log1p handles zeros gracefully
     ames_data['Log_Inflation_Adjusted_Price'] = np.log1p(ames_data['Inflation_Adjusted_Price'])
 
-    skewed_features = ['TotalBsmtSF', '1stFlrSF', 'GrLivArea', 'TotRmsAbvGrd', 'House_Age']
-    for feature in skewed_features:
-        ames_data[f'Log_{feature}'] = np.log1p(ames_data[feature])
+    st.markdown("""
+    Log transformations help normalize positively skewed distributions, making them more symmetric and suitable for modeling. 
+    Here, both `SalePrice` and `Inflation_Adjusted_Price` are log-transformed for better analysis.
+    """)
 
-    # Visualize Transformed Feature Distributions
-    features_to_plot = ['Log_SalePrice', 'Log_Inflation_Adjusted_Price'] + [f'Log_{feature}' for feature in skewed_features]
-
-    # Calculate rows and columns for subplots
-    n_features = len(features_to_plot)
-    n_cols = 3  # Number of columns
-    n_rows = (n_features // n_cols) + (n_features % n_cols > 0)  # Calculate rows
-
-    fig, axes = plt.subplots(n_rows, n_cols, figsize=(15, 5 * n_rows))  # Adjust figure size dynamically
-    axes = axes.flatten()  # Flatten axes for easy iteration
-
+    # Visualize transformed distributions
+    features_to_plot = ['SalePrice', 'Log_SalePrice', 'Inflation_Adjusted_Price', 'Log_Inflation_Adjusted_Price']
+    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+    axes = axes.ravel()
     for i, feature in enumerate(features_to_plot):
-        sns.histplot(ames_data[feature], kde=True, ax=axes[i], color='blue', alpha=0.7)
+        sns.histplot(ames_data[feature], bins=30, kde=True, ax=axes[i], color='blue', alpha=0.7)
         axes[i].set_title(f"Distribution of {feature}")
         axes[i].set_xlabel(feature)
         axes[i].set_ylabel("Frequency")
-
-    # Hide unused axes
-    for j in range(i + 1, len(axes)):
-        fig.delaxes(axes[j])
-
-    plt.tight_layout()
-    st.pyplot(fig)
-
-
-    # Outlier Analysis Using Boxplots
-    st.markdown("### Outlier Analysis")
-    features_to_check = ['SalePrice', 'Log_GrLivArea', 'GarageArea', 'Log_TotalBsmtSF', 'Log_House_Age']
-
-    st.write("#### Boxplots for Outlier Detection")
-    fig, axes = plt.subplots(1, len(features_to_check), figsize=(20, 5))
-    for i, feature in enumerate(features_to_check):
-        sns.boxplot(y=ames_data[feature], ax=axes[i], color='blue', notch=True)
-        axes[i].set_title(f"{feature}")
     plt.tight_layout()
     st.pyplot(fig)
 
     st.markdown("""
-    Boxplots indicate outliers in features like `SalePrice`, `Log_GrLivArea`, and `GarageArea`. These need handling to improve model performance.
+    - **SalePrice**: Before transformation, it is slightly right-skewed. After log transformation, it becomes more symmetric.
+    - **Inflation_Adjusted_Price**: Similar behavior as SalePrice, with a smoother, approximately normal distribution after transformation.
     """)
 
-    # Outlier Handling (Capping)
-    st.markdown("### Outlier Handling (Capping)")
+    # Log Transformation for Skewed Features
+    st.markdown("### Log Transformation for Top Positively Skewed Features")
+    skewed_features = ['TotalBsmtSF', '1stFlrSF', 'GrLivArea', 'TotRmsAbvGrd', 'House_Age']
+    for feature in skewed_features:
+        ames_data[f'Log_{feature}'] = np.log1p(ames_data[feature])  # Adding 1 to handle zeros
+
+    # Visualize transformed features
+    log_features = [f'Log_{feature}' for feature in skewed_features]
+    fig, axes = plt.subplots(3, 2, figsize=(12, 12))
+    axes = axes.ravel()
+    for i, feature in enumerate(log_features):
+        sns.histplot(ames_data[feature], bins=30, kde=True, ax=axes[i], color='purple', alpha=0.7)
+        axes[i].set_title(f"Distribution of {feature}")
+        axes[i].set_xlabel(feature)
+        axes[i].set_ylabel("Frequency")
+
+    # Remove extra subplot if odd number of plots
+    if len(log_features) % 2 != 0:
+        fig.delaxes(axes[-1])
+    plt.tight_layout()
+    st.pyplot(fig)
+
+    st.markdown("""
+    **Key Observations**:
+    - Log transformations reduce skewness and stabilize feature distributions.
+    - Features like `GrLivArea`, `TotalBsmtSF`, and `House_Age` exhibit significant improvements in normality after transformation.
+    """)
+
+    # Outlier Analysis Using Boxplots
+    st.markdown("### Outlier Analysis Using Boxplots")
+    features_to_check = ['SalePrice', 'Log_GrLivArea', 'Log_1stFlrSF', 'GarageCars', 
+                         'GarageArea', 'Log_TotalBsmtSF', 'FullBath', 'YearBuilt', 
+                         'Log_House_Age']
+
+    # Visualize boxplots for each feature
+    fig, axes = plt.subplots(3, 3, figsize=(15, 12))
+    axes = axes.ravel()
+    for i, feature in enumerate(features_to_check):
+        sns.boxplot(y=ames_data[feature], color='blue', ax=axes[i], notch=True)
+        axes[i].set_title(f'Boxplot of {feature}')
+        axes[i].set_ylabel(feature)
+
+    plt.tight_layout()
+    st.pyplot(fig)
+
+    st.markdown("""
+    **Outlier Observations**:
+    - `SalePrice`: Significant outliers in the higher price range.
+    - `Log_GrLivArea` and `Log_TotalBsmtSF`: Few outliers remain after log transformation.
+    - `GarageCars` and `GarageArea`: Minimal outliers with some saturation.
+    - `Log_House_Age`: Older homes exhibit significant outliers, indicating lower prices for very old properties.
+    """)
+
+    # Outlier Capping/Trimming
+    st.markdown("### Outlier Handling (Capping/Trimming)")
     def cap_outliers(df, column):
         Q1 = df[column].quantile(0.25)
         Q3 = df[column].quantile(0.75)
@@ -842,17 +874,26 @@ if sections == "Feature Transformation and Outlier Analysis":
     for feature in features_to_cap:
         ames_data = cap_outliers(ames_data, feature)
 
-    st.markdown("Outlier capping applied to selected features.")
-
-    # Boxplots after capping
-    st.write("#### Boxplots After Outlier Handling")
-    fig, axes = plt.subplots(1, len(features_to_cap), figsize=(20, 5))
+    # Visualize distributions and boxplots after outlier handling
+    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
     for i, feature in enumerate(features_to_cap):
-        sns.boxplot(y=ames_data[feature], ax=axes[i], color='green', notch=True)
-        axes[i].set_title(f"{feature}")
+        sns.histplot(ames_data[feature], bins=30, kde=True, ax=axes[i // 2, i % 2], color='purple', alpha=0.7)
+        axes[i // 2, i % 2].set_title(f"Distribution of {feature} After Outlier Handling")
     plt.tight_layout()
     st.pyplot(fig)
 
     st.markdown("""
-    Post-capping boxplots show reduced outliers, improving data quality without compromising feature distributions.
+    After outlier handling, the distributions become more stable, reducing the impact of extreme values.
+    """)
+
+    # Boxplots after capping
+    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+    for i, feature in enumerate(features_to_cap):
+        sns.boxplot(ames_data[feature], ax=axes[i // 2, i % 2], color="blue", notch=True)
+        axes[i // 2, i % 2].set_title(f"Boxplot of {feature} After Outlier Handling")
+    plt.tight_layout()
+    st.pyplot(fig)
+
+    st.markdown("""
+    Boxplots confirm that extreme outliers have been reduced without significantly altering the original feature distributions.
     """)
