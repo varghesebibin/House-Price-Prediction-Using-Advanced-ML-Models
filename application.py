@@ -51,7 +51,7 @@ if sections == "Introduction":
     st.title("Welcome to the House Price Prediction App!")
 
     # Add an image
-    st.image("intro_image.jpg", caption="Discover Your Dream House Value", use_column_width=True)
+    st.image("intro_image.jpg", caption="Discover Your Dream House Value", use_container_width=True)
 
     st.markdown("""
     ### About the App
