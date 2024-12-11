@@ -15,6 +15,9 @@ from sklearn.impute import KNNImputer
 from sklearn.experimental import enable_iterative_imputer  # noqa
 from sklearn.impute import IterativeImputer
 import plotly.express as px
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
 
 # Set the page layout
 st.set_page_config(page_title="House Price Prediction App", layout="wide")
@@ -898,3 +901,90 @@ if sections == "Feature Transformation and Outlier Analysis":
     st.markdown("""
     Boxplots confirm that extreme outliers have been reduced without significantly altering the original feature distributions.
     """)
+# Principal Component Analysis (PCA) Section
+if sections == "Principal Component Analysis":
+    st.title("Principal Component Analysis (PCA)")
+
+    st.markdown("""
+    PCA is a dimensionality reduction technique that transforms correlated features into uncorrelated principal components, 
+    capturing the maximum variance in the data.
+    """)
+
+    # Features for PCA
+    features_for_pca = ['Log_GrLivArea', 'Log_1stFlrSF', 'Log_TotalBsmtSF', 'GarageArea',
+                        'GarageCars', 'OverallQual', 'YearBuilt', 'YearRemodAdd', 'FullBath', 'Log_House_Age']
+
+    # Normalize the features
+    scaler = StandardScaler()
+    normalized_data = scaler.fit_transform(ames_data[features_for_pca])
+
+    # Apply PCA
+    pca = PCA(n_components=5)  # Adjust n_components if needed
+    pca_results = pca.fit_transform(normalized_data)
+
+    # PCA Explained Variance
+    explained_variance = pca.explained_variance_ratio_
+
+    # Add PCA components back to the dataset
+    for i in range(pca.n_components):
+        ames_data[f'PCA_Component_{i+1}'] = pca_results[:, i]
+
+    # Explained Variance Table
+    st.markdown("### Explained Variance by PCA Components")
+    explained_variance_df = pd.DataFrame({
+        "Principal Component": [f"PCA_Component_{i+1}" for i in range(len(explained_variance))],
+        "Variance Explained": explained_variance
+    })
+    st.dataframe(explained_variance_df)
+
+    st.markdown("""
+    The table above shows the percentage of variance explained by each principal component. The first two components capture most of the variance:
+    - **PCA_Component_1**: 54.1% variance explained
+    - **PCA_Component_2**: 14.0% variance explained
+    - Cumulative variance for the first two components: ~68.1%
+    """)
+
+    # Scree Plot
+    st.markdown("### Scree Plot: Explained Variance by PCA Components")
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.plot(range(1, len(explained_variance) + 1), explained_variance, marker='o', linestyle='--')
+    ax.set_title('Explained Variance by PCA Components')
+    ax.set_xlabel('Principal Component')
+    ax.set_ylabel('Variance Explained')
+    ax.set_xticks(range(1, len(explained_variance) + 1))
+    ax.grid(True)
+    st.pyplot(fig)
+
+    st.markdown("""
+    The scree plot visualizes how much variance each principal component explains. The "elbow" point suggests that the first two or three components 
+    capture most of the dataset's variance.
+    """)
+
+    # PCA Components vs SalePrice
+    st.markdown("### PCA Components vs SalePrice")
+    selected_components = [f'PCA_Component_{i+1}' for i in range(2)]  # Choose first two components for simplicity
+
+    fig, axes = plt.subplots(1, len(selected_components), figsize=(12, 5))
+    for i, component in enumerate(selected_components):
+        axes[i].scatter(ames_data[component], ames_data['SalePrice'], alpha=0.5, color='blue')
+        axes[i].set_title(f"{component} vs SalePrice")
+        axes[i].set_xlabel(component)
+        axes[i].set_ylabel('SalePrice')
+
+    plt.tight_layout()
+    st.pyplot(fig)
+
+    st.markdown("""
+    The scatter plots show how the first two principal components relate to the target variable (`SalePrice`).
+    - **PCA_Component_1** shows a strong positive correlation with SalePrice, reflecting its high explained variance.
+    - **PCA_Component_2** has a weaker correlation, capturing secondary patterns in the data.
+    """)
+
+    # Download Dataset with PCA Components
+    st.markdown("### Download Dataset with PCA Components")
+    st.download_button(
+        label="Download PCA Dataset",
+        data=ames_data.to_csv(index=False).encode('utf-8'),
+        file_name='ames_data_with_pca.csv',
+        mime='text/csv'
+    )
