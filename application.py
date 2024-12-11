@@ -1143,12 +1143,15 @@ if sections == "Predict House Price":
         'Log_House_Age': 'House_Age'
     }
 
-    # Define required features for prediction (including original for log-transformed)
+    # Define required features for prediction
     required_features = [
-        'OverallQual', 'GrLivArea', 'GarageCars', 'GarageArea', 
-        '1stFlrSF', 'FullBath', 'YearBuilt', 'TotRmsAbvGrd', 
+        'OverallQual', 'GrLivArea', 'GarageCars', 'GarageArea',
+        '1stFlrSF', 'FullBath', 'YearBuilt', 'TotRmsAbvGrd',
         'YearRemodAdd', 'House_Age'
     ]
+
+    # Define features that are integers
+    integer_features = ['OverallQual', 'GarageCars', 'TotRmsAbvGrd', 'YearBuilt', 'YearRemodAdd', 'FullBath']
 
     # Model selection
     model_choice = st.selectbox("Select a Model for Prediction", [
@@ -1173,15 +1176,16 @@ if sections == "Predict House Price":
     with open(model_file, 'rb') as file:
         model = pickle.load(file)
 
-    # Input values for prediction (showing original features for user)
+    # Input values for prediction
     st.markdown("### Input House Features")
     input_data = {}
     for feature in required_features:
         min_val = float(ames_data[feature].min())
         max_val = float(ames_data[feature].max())
-        input_data[feature] = st.slider(
-            f"{feature}", min_val, max_val, float((min_val + max_val) / 2)
-        )
+        if feature in integer_features:
+            input_data[feature] = st.slider(f"{feature} (Integer)", int(min_val), int(max_val), int((min_val + max_val) / 2))
+        else:
+            input_data[feature] = st.slider(f"{feature} (Float)", min_val, max_val, float((min_val + max_val) / 2))
 
     # Convert original inputs to log-transformed values where needed
     transformed_input_data = {}
