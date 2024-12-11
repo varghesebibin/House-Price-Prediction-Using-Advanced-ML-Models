@@ -18,6 +18,8 @@ import plotly.express as px
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
+import xgboost as xgb
+
 
 # Set the page layout
 st.set_page_config(page_title="House Price Prediction App", layout="wide")
