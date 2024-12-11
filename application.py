@@ -41,11 +41,51 @@ st.sidebar.title("Navigation")
 sections = st.sidebar.radio(
     "Go to",
     [
-        "Dataset Overview", "Data Cleaning", "Visualizations",
+        "Introduction", "Dataset Overview", "Data Cleaning", "Visualizations",
         "Data Integration & Feature Engineering", "Exploratory Data Analysis", "Feature Transformation and Outlier Analysis", "Principal Component Analysis", 
         "Model Building and Evaluation", "Predict House Price", "Real World Impact"
     ]
 )
+
+if sections == "Introduction":
+    st.title("Welcome to the House Price Prediction App!")
+
+    # Add an image
+    st.image("intro_image.jpg", caption="Discover Your Dream House Value", use_column_width=True)
+
+    st.markdown("""
+    ### About the App
+    This app is designed for:
+    - **Homebuyers**: Estimate the fair market value of a property based on its features.
+    - **Real Estate Agents**: Use data-driven insights to guide clients on pricing strategies.
+    - **Data Enthusiasts**: Explore advanced predictive modeling techniques applied to real-world housing data.
+    """)
+
+    st.markdown("""
+    ### Data Range Limitation
+    - **Dataset Timeframe**: This app uses data from 2006 to 2010.
+    - **Implications**: Predictions are based on macroeconomic conditions and housing trends specific to that period. Users must consider how these trends might differ in today's market.
+    """)
+
+    st.markdown("""
+    ### What Can You Do with This App?
+    - Predict house prices using advanced machine learning models like **Linear Regression**, **Ridge**, **Lasso**, and ensemble methods such as **Random Forest** and **Gradient Boosting**.
+    - Explore relationships between housing features and sale prices through **EDA**.
+    - Understand the impact of macroeconomic factors like **CPI**, **Inflation**, and **GDP** on housing prices.
+    """)
+
+    st.markdown("""
+    ### ABCDE Approach
+    - **Audience**: Buyers, agents, investors, and analysts.
+    - **Behavior**: Predict, explore, and understand house price data.
+    - **Condition**: Based on features like size, quality, location, and macroeconomic trends from 2006 to 2010.
+    - **Degree**: Provides highly accurate predictions and detailed exploratory visualizations.
+    - **Evaluation**: Success is measured by accurate predictions and user insights for decision-making.
+    """)
+
+    st.markdown("""
+    ### Ready? Use the sidebar to start exploring!
+    """)
 
 # Dataset Overview Section
 if sections == 'Dataset Overview':
@@ -1205,3 +1245,46 @@ if sections == "Predict House Price":
 
     # Display predicted price
     st.markdown(f"### Predicted House Price: ${price_pred[0]:,.2f}")
+
+if sections == "Real World Application and Impact":
+    st.title("Real World Application and Impact")
+
+    st.markdown("""
+    ### Practical Use Cases
+    - **Homebuyers and Sellers**:
+      - Determine the fair market value of properties based on historical data.
+      - Adjust expectations for price predictions by considering macroeconomic trends from 2006–2010.
+
+    - **Real Estate Agents**:
+      - Support clients with data-driven pricing strategies based on historical patterns.
+      - Highlight the value of property features such as area, quality, and location.
+
+    - **Investors and Analysts**:
+      - Analyze past trends to identify long-term investment opportunities.
+      - Understand the impact of historical macroeconomic conditions on housing markets.
+    """)
+
+    st.markdown("""
+    ### Impact of the Dataset's Timeframe
+    - **Historical Insights**:
+      - The app provides a snapshot of housing price behavior during the **2006–2010** timeframe.
+      - Users must interpret predictions with the understanding that market conditions may differ today.
+
+    - **Use Case Limitation**:
+      - While the app can accurately model historical data, current market predictions would require integrating updated datasets.
+
+    ### Ethical Considerations
+    - **Transparency**:
+      - The limited timeframe of the dataset is disclosed to ensure users interpret predictions responsibly.
+    - **Data Privacy**:
+      - Ensures no sensitive or personal user data is stored or shared.
+    """)
+
+    st.markdown("""
+    ### Future Scope
+    - Expand the dataset to include post-2010 data for improved relevance in current markets.
+    - Incorporate geospatial data to account for neighborhood and regional variations.
+    - Use additional macroeconomic variables to analyze long-term trends.
+    """)
+
+    st.markdown("### Thank you for using the House Price Prediction App!")
