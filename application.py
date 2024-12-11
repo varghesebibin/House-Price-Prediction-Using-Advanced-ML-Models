@@ -854,9 +854,10 @@ if sections == "Feature Transformation and Outlier Analysis":
     st.markdown("""
     **Outlier Observations**:
     - `SalePrice`: Significant outliers in the higher price range.
-    - `Log_GrLivArea` and `Log_TotalBsmtSF`: Few outliers remain after log transformation.
-    - `GarageCars` and `GarageArea`: Minimal outliers with some saturation.
-    - `Log_House_Age`: Older homes exhibit significant outliers, indicating lower prices for very old properties.
+    - `Log_GrLivArea`: Few outliers exist, suggesting homes with unusually high above-ground living area.
+    - `Log_TotalBsmtSF`: Outliers exist, indicating homes with much larger basement areas.
+    - `GarageCars`:A single notable outlier exists with more than 3 cars.
+    - `GarageArea`:  Outliers are more pronounced, indicating garages significantly larger than typical ones.
     """)
 
     # Outlier Capping/Trimming
