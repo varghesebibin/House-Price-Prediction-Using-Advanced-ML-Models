@@ -1124,6 +1124,8 @@ if sections == "Model Building and Evaluation":
 
 # Predict House Price Section
 if sections == "Predict House Price":
+    import numpy as np
+
     st.title("Predict House Price")
     st.markdown("""
     Use this section to predict house prices using one of six trained models:
@@ -1134,6 +1136,26 @@ if sections == "Predict House Price":
     - **Random Forest Regression**
     - **Gradient Boosting Regression**
     """)
+
+    # Perform log transformation for features (if not already done)
+    st.markdown("#### Checking and Performing Log Transformations for Skewed Features")
+    skewed_features = ['GrLivArea', '1stFlrSF', 'TotRmsAbvGrd', 'House_Age']  # Removed TotalBsmtSF
+    for feature in skewed_features:
+        log_feature = f'Log_{feature}'
+        if log_feature not in ames_data.columns:
+            ames_data[log_feature] = ames_data[feature].apply(lambda x: np.log1p(x))
+            st.write(f"Log transformation applied for {feature}")
+
+    # Check if all required features exist
+    required_features = [
+        'OverallQual', 'Log_GrLivArea', 'GarageCars', 'GarageArea', 
+        'Log_1stFlrSF', 'FullBath', 'YearBuilt', 'Log_TotRmsAbvGrd', 
+        'YearRemodAdd', 'Log_House_Age'
+    ]  # Aligned with features used in model building
+    missing_features = [feature for feature in required_features if feature not in ames_data.columns]
+    if missing_features:
+        st.error(f"Missing required features for prediction: {', '.join(missing_features)}")
+        st.stop()
 
     # Model selection
     model_choice = st.selectbox("Select a Model for Prediction", [
@@ -1146,6 +1168,14 @@ if sections == "Predict House Price":
     ])
 
     # Load the selected model
+    model_files = {
+        'Linear Regression': 'linear_regression.pkl',
+        'Ridge Regression': 'ridge_regression.pkl',
+        'Lasso Regression': 'lasso_regression.pkl',
+        'Elastic Net Regression': 'elastic_net_regression.pkl',
+        'Random Forest Regression': 'random_forest_regression.pkl',
+        'Gradient Boosting Regression': 'gradient_boosting_regression.pkl'
+    }
     model_file = model_files[model_choice]
     with open(model_file, 'rb') as file:
         model = pickle.load(file)
@@ -1153,10 +1183,15 @@ if sections == "Predict House Price":
     # Input values for prediction
     st.markdown("### Input House Features")
     input_data = {}
-    for feature in features:
-        min_val = float(ames_data[feature].min())
-        max_val = float(ames_data[feature].max())
-        input_data[feature] = st.slider(f"{feature}", min_val, max_val, float((min_val + max_val) / 2))
+    for feature in required_features:
+        if feature in ames_data.columns:
+            min_val = float(ames_data[feature].min())
+            max_val = float(ames_data[feature].max())
+            input_data[feature] = st.slider(
+                f"{feature}", min_val, max_val, float((min_val + max_val) / 2)
+            )
+        else:
+            st.warning(f"{feature} is not available in the dataset.")
 
     # Convert inputs to DataFrame for prediction
     input_df = pd.DataFrame([input_data])
@@ -1165,4 +1200,5 @@ if sections == "Predict House Price":
     log_price_pred = model.predict(input_df)
     price_pred = np.expm1(log_price_pred)  # Convert log price back to original scale
 
+    # Display predicted price
     st.markdown(f"### Predicted House Price: ${price_pred[0]:,.2f}")
